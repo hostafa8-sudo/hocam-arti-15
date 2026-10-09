@@ -61,7 +61,7 @@
         .click-target { width: 110px; height: 110px; background: #ef4444; border-radius: 50%; margin: 15px auto; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: bold; cursor: pointer; }
 
         #container-3d {
-            width: 260px; height: 260px; margin: 10px auto 0; border: 2px solid #334155; border-radius: 8px; overflow: hidden;
+            width: 280px; height: 280px; margin: 10px auto 0; border: 2px solid #38bdf8; border-radius: 10px; overflow: hidden; background: #000;
         }
 
         footer { margin-top: 20px; font-size: 0.75rem; color: #64748b; text-align: center; line-height: 1.4; }
@@ -103,11 +103,11 @@
         <button class="nav-btn" onclick="switchGame3D(2)">🐍 3D Yılan</button>
         <button class="nav-btn" onclick="switchGame3D(3)">👾 3D Uzay</button>
         <button class="nav-btn" onclick="switchGame3D(4)">🏓 3D Pong</button>
+        <button class="nav-btn" onclick="switchGame3D(5)">🧱 3D Tuğla</button>
     </div>
 
     <!-- ================= 2D OYUN KARTLARI ================= -->
 
-    <!-- OYUN 1: YILAN -->
     <div id="game1" class="card active">
         <h2>Yılan Oyunu</h2>
         <div>Skor: <span id="snake-score">0</span></div>
@@ -121,7 +121,6 @@
         <button class="action-btn" onclick="resetSnake()">Yeniden Başlat</button>
     </div>
 
-    <!-- OYUN 2: XOX -->
     <div id="game2" class="card">
         <h2>Tic-Tac-Toe</h2>
         <div class="xox-board">
@@ -139,7 +138,6 @@
         <button class="action-btn" onclick="resetXOX()">Yeniden Başlat</button>
     </div>
 
-    <!-- OYUN 3: DEVAŞA HAFIZA -->
     <div id="game3" class="card">
         <h2>Devasa Hafıza (16 Kart)</h2>
         <div id="mem-status">Eşleşme: 0 / 8</div>
@@ -147,7 +145,6 @@
         <button class="action-btn" onclick="resetMemory()">Yeniden Başlat</button>
     </div>
 
-    <!-- OYUN 4: REFLEKS -->
     <div id="game4" class="card">
         <h2>Refleks Testi (5 Sn)</h2>
         <div id="click-status">5 Saniyede Kaç Tık?</div>
@@ -156,7 +153,6 @@
         <button class="action-btn" onclick="resetClicker()">Sıfırla</button>
     </div>
 
-    <!-- OYUN 5: PING PONG -->
     <div id="game5" class="card">
         <h2>Ping Pong</h2>
         <div>Skor: <span id="pong-score">0</span></div>
@@ -172,7 +168,6 @@
         <button class="action-btn" onclick="resetPong()">Yeniden Başlat</button>
     </div>
 
-    <!-- OYUN 6: FLAPPY BIRD -->
     <div id="game6" class="card">
         <h2>Kuş Oyunu (Gitgide Zorlaşır)</h2>
         <div>Skor: <span id="bird-score">0</span></div>
@@ -181,7 +176,6 @@
         <button class="action-btn" onclick="resetBird()">Yeniden Başlat</button>
     </div>
 
-    <!-- OYUN 7: UZAY SAVAŞI -->
     <div id="game7" class="card">
         <h2>Uzay Savaşı</h2>
         <div>Skor: <span id="space-score">0</span></div>
@@ -199,7 +193,6 @@
         <button class="action-btn" onclick="resetSpace()">Yeniden Başlat</button>
     </div>
 
-    <!-- OYUN 8: TUĞLA KIRMA -->
     <div id="game8" class="card">
         <h2>Tuğla Kırma</h2>
         <div>Skor: <span id="brick-score">0</span></div>
@@ -215,7 +208,6 @@
         <button class="action-btn" onclick="resetBrick()">Yeniden Başlat</button>
     </div>
 
-    <!-- OYUN 9: TETRİS -->
     <div id="game9" class="card">
         <h2>Tetris</h2>
         <div>Skor: <span id="tetris-score">0</span></div>
@@ -229,7 +221,6 @@
         <button class="action-btn" onclick="resetTetris()">Yeniden Başlat</button>
     </div>
 
-    <!-- OYUN 10: HEDEF VURMA -->
     <div id="game10" class="card">
         <h2>Hedef Vurma</h2>
         <div>Skor: <span id="target-score">0</span></div>
@@ -237,7 +228,6 @@
         <button class="action-btn" onclick="resetTarget()">Yeniden Başlat</button>
     </div>
 
-    <!-- OYUN 11: SONSUZ ZIPLAMA -->
     <div id="game11" class="card">
         <h2>Sonsuz Zıplama</h2>
         <div>Yükseklik: <span id="jump-score">0</span>m</div>
@@ -253,7 +243,6 @@
         <button class="action-btn" onclick="resetJump()">Yeniden Başlat</button>
     </div>
 
-    <!-- OYUN 12: SIMON SAYS -->
     <div id="game12" class="card">
         <h2>Efsane Simon (6 Renk)</h2>
         <div id="simon-status">Seviye: 1</div>
@@ -268,7 +257,6 @@
         <button class="action-btn" onclick="resetSimon()">Yeniden Başlat</button>
     </div>
 
-    <!-- OYUN 13: BOKS ARENASI -->
     <div id="game13" class="card">
         <h2>Boks Arenası</h2>
         <div>Skor: <span id="box-score">0</span></div>
@@ -280,7 +268,6 @@
         <button class="action-btn" onclick="resetBox()">Yeniden Başlat</button>
     </div>
 
-    <!-- OYUN 14: ARABA YARIŞI -->
     <div id="game14" class="card">
         <h2>Nitro Araba</h2>
         <div>Skor: <span id="race-score">0</span></div>
@@ -294,13 +281,12 @@
 
     <!-- ================= 3D OYUN KARTLARI ================= -->
 
-    <!-- 3D OYUN CONTAINER KARTI -->
     <div id="game3D-card" class="card">
         <h2 id="title-3d">3D Araba Yarışı</h2>
         <div>Skor: <span id="score-3d">0</span></div>
         <div id="container-3d"></div>
         <div id="ctrl-3d-box" style="margin-top: 10px; display: flex; gap: 10px; justify-content: center;">
-            <!-- Kontrol butonları dinamik dolacak -->
+            <!-- Kontroller Dinamik Dolacak -->
         </div>
         <button class="action-btn" onclick="reset3DGame()">Yeniden Başlat</button>
     </div>
@@ -660,197 +646,260 @@
             activeAnimFrame = requestAnimationFrame(loopRace);
         }
 
-        /* ================= 3D MOTOR KODLARI (THREE.JS) ================= */
+        /* ================= 3D MOTOR VE OYUNLAR (SABİT & AKICI) ================= */
         let scene3D, camera3D, renderer3D;
-        let obj3D_1, obj3D_2 = [];
-        let score3D = 0, is3DActive = false;
+        let p3D, obs3D = [], score3D = 0, is3DActive = false;
+        let keys3D = { left: false, right: false };
 
         function switchGame3D(num) {
             stopAllGames();
             currentGame3D = num;
             document.querySelectorAll("#nav-3d .nav-btn").forEach(b => b.classList.remove("active"));
-            event.target.classList.add("active");
+            if(event && event.target) event.target.classList.add("active");
             
             const ctrlBox = document.getElementById("ctrl-3d-box");
             ctrlBox.innerHTML = "";
 
-            if(num === 1) {
-                document.getElementById("title-3d").innerText = "3D Araba Yarışı";
+            if(num === 1) { // 3D Araba
+                document.getElementById("title-3d").innerText = "3D Nitro Araba";
                 ctrlBox.innerHTML = `
-                    <button class="ctrl-btn" style="width: 100px;" onclick="move3DCar(-1)">⬅️ Sol</button>
-                    <button class="ctrl-btn" style="width: 100px;" onclick="move3DCar(1)">Sağ ➡️</button>
+                    <button class="ctrl-btn" style="width: 100px;" 
+                        ontouchstart="keys3D.left=true" ontouchend="keys3D.left=false"
+                        onmousedown="keys3D.left=true" onmouseup="keys3D.left=false">⬅️ Sol</button>
+                    <button class="ctrl-btn" style="width: 100px;" 
+                        ontouchstart="keys3D.right=true" ontouchend="keys3D.right=false"
+                        onmousedown="keys3D.right=true" onmouseup="keys3D.right=false">Sağ ➡️</button>
                 `;
-            } else if(num === 2) {
+            } else if(num === 2) { // 3D Yılan
                 document.getElementById("title-3d").innerText = "3D Yılan Oyunu";
                 ctrlBox.innerHTML = `
-                    <button class="ctrl-btn" onclick="setDir3D('LEFT')">⬅️</button>
-                    <button class="ctrl-btn" onclick="setDir3D('RIGHT')">➡️</button>
+                    <button class="ctrl-btn" onclick="s3DDir='LEFT'">⬅️</button>
+                    <button class="ctrl-btn" onclick="s3DDir='RIGHT'">➡️</button>
                 `;
-            } else if(num === 3) {
-                document.getElementById("title-3d").innerText = "3D Uzay Savaşları";
+            } else if(num === 3) { // 3D Uzay
+                document.getElementById("title-3d").innerText = "3D Uzay Savaşı";
                 ctrlBox.innerHTML = `
-                    <button class="ctrl-btn" style="width: 80px;" onclick="move3DShip(-1)">⬅️</button>
+                    <button class="ctrl-btn" style="width: 70px;" 
+                        ontouchstart="keys3D.left=true" ontouchend="keys3D.left=false"
+                        onmousedown="keys3D.left=true" onmouseup="keys3D.left=false">⬅️</button>
                     <button class="ctrl-btn" style="width: 90px; background: #ef4444;" onclick="shoot3D()">🔥 Ateş</button>
-                    <button class="ctrl-btn" style="width: 80px;" onclick="move3DShip(1)">➡️</button>
+                    <button class="ctrl-btn" style="width: 70px;" 
+                        ontouchstart="keys3D.right=true" ontouchend="keys3D.right=false"
+                        onmousedown="keys3D.right=true" onmouseup="keys3D.right=false">➡️</button>
                 `;
-            } else if(num === 4) {
-                document.getElementById("title-3d").innerText = "3D Ping Pong";
+            } else if(num === 4) { // 3D Pong
+                document.getElementById("title-3d").innerText = "3D Akıcı Pong";
                 ctrlBox.innerHTML = `
-                    <button class="ctrl-btn" style="width: 100px;" onclick="move3DPaddle(-1)">⬅️ Sol</button>
-                    <button class="ctrl-btn" style="width: 100px;" onclick="move3DPaddle(1)">Sağ ➡️</button>
+                    <button class="ctrl-btn" style="width: 100px;" 
+                        ontouchstart="keys3D.left=true" ontouchend="keys3D.left=false"
+                        onmousedown="keys3D.left=true" onmouseup="keys3D.left=false">⬅️ Sol</button>
+                    <button class="ctrl-btn" style="width: 100px;" 
+                        ontouchstart="keys3D.right=true" ontouchend="keys3D.right=false"
+                        onmousedown="keys3D.right=true" onmouseup="keys3D.right=false">Sağ ➡️</button>
+                `;
+            } else if(num === 5) { // 3D Tuğla Kırma
+                document.getElementById("title-3d").innerText = "3D Tuğla Kırma";
+                ctrlBox.innerHTML = `
+                    <button class="ctrl-btn" style="width: 100px;" 
+                        ontouchstart="keys3D.left=true" ontouchend="keys3D.left=false"
+                        onmousedown="keys3D.left=true" onmouseup="keys3D.left=false">⬅️ Sol</button>
+                    <button class="ctrl-btn" style="width: 100px;" 
+                        ontouchstart="keys3D.right=true" ontouchend="keys3D.right=false"
+                        onmousedown="keys3D.right=true" onmouseup="keys3D.right=false">Sağ ➡️</button>
                 `;
             }
             reset3DGame();
         }
 
-        function init3DEngine() {
+        function init3D() {
             const container = document.getElementById('container-3d');
             container.innerHTML = "";
-            
             scene3D = new THREE.Scene();
             scene3D.background = new THREE.Color(0x0f172a);
 
             camera3D = new THREE.PerspectiveCamera(60, 1, 0.1, 1000);
-            camera3D.position.set(0, 4, 8);
+            camera3D.position.set(0, 3.5, 7);
             camera3D.lookAt(0, 0, 0);
 
             renderer3D = new THREE.WebGLRenderer({ antialias: true });
-            renderer3D.setSize(256, 256);
+            renderer3D.setSize(276, 276);
             container.appendChild(renderer3D.domElement);
 
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
             scene3D.add(ambientLight);
 
-            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
             dirLight.position.set(5, 10, 7);
             scene3D.add(dirLight);
         }
 
-        let car3DLane = 1;
-        let lanes3D = [-2, 0, 2];
-        let speed3D = 0.3;
-
         function reset3DGame() {
             stopAllGames();
-            init3DEngine();
-            score3D = 0;
-            document.getElementById("score-3d").innerText = score3D;
-            is3DActive = true;
-            obj3D_2 = [];
+            init3D();
+            score3D = 0; document.getElementById("score-3d").innerText = score3D;
+            is3DActive = true; obs3D = []; keys3D = { left: false, right: false };
 
-            if(currentGame3D === 1) { // 3D Araba
-                const roadGeo = new THREE.PlaneGeometry(8, 100);
+            if(currentGame3D === 1) { // 3D ARABA
                 const roadMat = new THREE.MeshLambertMaterial({ color: 0x1e293b });
-                const road = new THREE.Mesh(roadGeo, roadMat);
-                road.rotation.x = -Math.PI / 2; road.position.z = -40;
-                scene3D.add(road);
+                const road = new THREE.Mesh(new THREE.PlaneGeometry(8, 100), roadMat);
+                road.rotation.x = -Math.PI / 2; road.position.z = -40; scene3D.add(road);
 
-                obj3D_1 = createCar3D(0x38bdf8);
-                scene3D.add(obj3D_1);
-                car3DLane = 1;
+                p3D = create3DBox(1, 0.5, 1.8, 0x38bdf8);
+                scene3D.add(p3D);
                 loop3DRace();
-            } else if(currentGame3D === 2) { // 3D Yılan
-                obj3D_1 = new THREE.Mesh(
-                    new THREE.BoxGeometry(0.8, 0.8, 0.8),
-                    new THREE.MeshLambertMaterial({ color: 0x22c55e })
-                );
-                scene3D.add(obj3D_1);
+            } else if(currentGame3D === 2) { // 3D YILAN
+                p3D = create3DBox(0.8, 0.8, 0.8, 0x22c55e);
+                scene3D.add(p3D);
                 spawn3DFood();
                 loop3DSnake();
-            } else if(currentGame3D === 3) { // 3D Uzay
-                obj3D_1 = new THREE.Mesh(
-                    new THREE.ConeGeometry(0.6, 1.2, 4),
-                    new THREE.MeshLambertMaterial({ color: 0x38bdf8 })
-                );
-                obj3D_1.rotation.x = Math.PI / 2;
-                scene3D.add(obj3D_1);
+            } else if(currentGame3D === 3) { // 3D UZAY
+                p3D = create3DBox(0.8, 0.3, 1, 0x38bdf8);
+                scene3D.add(p3D);
                 loop3DSpace();
-            } else if(currentGame3D === 4) { // 3D Pong
-                obj3D_1 = new THREE.Mesh(
-                    new THREE.BoxGeometry(2, 0.4, 0.4),
-                    new THREE.MeshLambertMaterial({ color: 0x38bdf8 })
-                );
-                obj3D_1.position.z = 3;
-                scene3D.add(obj3D_1);
+            } else if(currentGame3D === 4) { // 3D PONG
+                p3D = create3DBox(2, 0.3, 0.4, 0x38bdf8);
+                p3D.position.z = 2.5; scene3D.add(p3D);
+                let ball = create3DSphere(0.3, 0xef4444);
+                ball.position.set(0, 0, 0); ball.userData = { dx: 0.06, dz: -0.07 };
+                scene3D.add(ball); obs3D = [ball];
                 loop3DPong();
+            } else if(currentGame3D === 5) { // 3D TUĞLA
+                p3D = create3DBox(2, 0.3, 0.4, 0x38bdf8);
+                p3D.position.z = 2.5; scene3D.add(p3D);
+                let ball = create3DSphere(0.25, 0xfacc15);
+                ball.position.set(0, 0, 1); ball.userData = { dx: 0.05, dz: -0.06 };
+                scene3D.add(ball);
+                
+                // Tuğlalar
+                for(let r=0; r<3; r++) {
+                    for(let c=0; c<5; c++) {
+                        let b = create3DBox(0.8, 0.3, 0.4, 0xef4444);
+                        b.position.set((c * 1.0) - 2, 0, (r * -0.6) - 1);
+                        scene3D.add(b); obs3D.push(b);
+                    }
+                }
+                loop3DBrick();
             }
         }
 
-        // 3D Araba Fonksiyonları
-        function createCar3D(col) {
-            const group = new THREE.Group();
-            const b = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.5, 2), new THREE.MeshLambertMaterial({ color: col }));
-            b.position.y = 0.25; group.add(b);
-            const c = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.4, 1), new THREE.MeshLambertMaterial({ color: 0x0f172a }));
-            c.position.set(0, 0.6, -0.1); group.add(c);
-            return group;
+        function create3DBox(w, h, d, col) {
+            return new THREE.Mesh(new THREE.BoxGeometry(w, h, d), new THREE.MeshLambertMaterial({ color: col }));
         }
-        function move3DCar(dir) {
-            car3DLane += dir; if(car3DLane < 0) car3DLane = 0; if(car3DLane > 2) car3DLane = 2;
+        function create3DSphere(r, col) {
+            return new THREE.Mesh(new THREE.SphereGeometry(r, 16, 16), new THREE.MeshLambertMaterial({ color: col }));
         }
+
+        // 3D Araba Döngüsü
         function loop3DRace() {
             if(!is3DActive || currentGame3D !== 1 || currentMode !== '3d') return;
-            obj3D_1.position.x += (lanes3D[car3DLane] - obj3D_1.position.x) * 0.2;
-            if(Math.random() < 0.03) {
-                const obs = createCar3D(0xef4444);
-                obs.position.set(lanes3D[Math.floor(Math.random()*3)], 0, -40);
-                scene3D.add(obs); obj3D_2.push(obs);
+            if(keys3D.left) { p3D.position.x -= 0.1; if(p3D.position.x < -2.8) p3D.position.x = -2.8; }
+            if(keys3D.right) { p3D.position.x += 0.1; if(p3D.position.x > 2.8) p3D.position.x = 2.8; }
+
+            if(Math.random() < 0.04) {
+                let obs = create3DBox(1, 0.5, 1.8, 0xef4444);
+                obs.position.set((Math.floor(Math.random()*3)-1)*2.5, 0, -35);
+                scene3D.add(obs); obs3D.push(obs);
             }
-            for(let i = obj3D_2.length-1; i>=0; i--) {
-                obj3D_2[i].position.z += 0.35;
-                if(Math.abs(obj3D_1.position.x - obj3D_2[i].position.x) < 1.0 && Math.abs(obj3D_1.position.z - obj3D_2[i].position.z) < 1.5) {
-                    is3DActive = false; document.getElementById("score-3d").innerText = score3D + " (Kaza!)"; return;
+            for(let i=obs3D.length-1; i>=0; i--) {
+                obs3D[i].position.z += 0.35;
+                if(Math.abs(p3D.position.x - obs3D[i].position.x) < 0.9 && Math.abs(p3D.position.z - obs3D[i].position.z) < 1.4) {
+                    document.getElementById("score-3d").innerText = score3D + " (Kaza!)"; return;
                 }
-                if(obj3D_2[i].position.z > 5) {
-                    scene3D.remove(obj3D_2[i]); obj3D_2.splice(i, 1);
-                    score3D += 10; document.getElementById("score-3d").innerText = score3D;
+                if(obs3D[i].position.z > 5) {
+                    scene3D.remove(obs3D[i]); obs3D.splice(i, 1); score3D += 10;
+                    document.getElementById("score-3d").innerText = score3D;
                 }
             }
             renderer3D.render(scene3D, camera3D);
             activeAnimFrame = requestAnimationFrame(loop3DRace);
         }
 
-        // 3D Yılan Fonksiyonları
+        // 3D Yılan Döngüsü
         let s3DDir = 'RIGHT';
-        function setDir3D(d) { s3DDir = d; }
         function spawn3DFood() {
-            const food = new THREE.Mesh(new THREE.SphereGeometry(0.4, 8, 8), new THREE.MeshLambertMaterial({ color: 0xef4444 }));
-            food.position.set((Math.random()*6)-3, 0, (Math.random()*6)-3);
-            scene3D.add(food); obj3D_2 = [food];
+            let f = create3DSphere(0.35, 0xef4444);
+            f.position.set((Math.random()*5)-2.5, 0, (Math.random()*5)-2.5);
+            scene3D.add(f); obs3D = [f];
         }
         function loop3DSnake() {
             if(!is3DActive || currentGame3D !== 2 || currentMode !== '3d') return;
-            if(s3DDir === 'RIGHT') obj3D_1.position.x += 0.05;
-            if(s3DDir === 'LEFT') obj3D_1.position.x -= 0.05;
-            if(obj3D_2[0] && obj3D_1.position.distanceTo(obj3D_2[0].position) < 0.8) {
-                scene3D.remove(obj3D_2[0]); score3D += 10; document.getElementById("score-3d").innerText = score3D; spawn3DFood();
+            if(s3DDir==='RIGHT') p3D.position.x += 0.04; if(s3DDir==='LEFT') p3D.position.x -= 0.04;
+            if(obs3D[0] && p3D.position.distanceTo(obs3D[0].position) < 0.7) {
+                scene3D.remove(obs3D[0]); score3D += 10; document.getElementById("score-3d").innerText = score3D; spawn3DFood();
             }
             renderer3D.render(scene3D, camera3D);
             activeAnimFrame = requestAnimationFrame(loop3DSnake);
         }
 
-        // 3D Uzay Fonksiyonları
-        function move3DShip(dir) { if(obj3D_1) obj3D_1.position.x += dir * 0.5; }
+        // 3D Uzay Döngüsü
         function shoot3D() {
-            const b = new THREE.Mesh(new THREE.SphereGeometry(0.2, 8, 8), new THREE.MeshBasicMaterial({ color: 0xef4444 }));
-            b.position.copy(obj3D_1.position); scene3D.add(b); obj3D_2.push(b);
+            let b = create3DSphere(0.15, 0xef4444);
+            b.position.copy(p3D.position); scene3D.add(b); obs3D.push(b);
         }
         function loop3DSpace() {
             if(!is3DActive || currentGame3D !== 3 || currentMode !== '3d') return;
-            for(let i=obj3D_2.length-1; i>=0; i--) {
-                obj3D_2[i].position.z -= 0.4;
-                if(obj3D_2[i].position.z < -20) { scene3D.remove(obj3D_2[i]); obj3D_2.splice(i, 1); score3D += 5; document.getElementById("score-3d").innerText = score3D; }
+            if(keys3D.left) { p3D.position.x -= 0.1; if(p3D.position.x < -2.8) p3D.position.x = -2.8; }
+            if(keys3D.right) { p3D.position.x += 0.1; if(p3D.position.x > 2.8) p3D.position.x = 2.8; }
+
+            for(let i=obs3D.length-1; i>=0; i--) {
+                obs3D[i].position.z -= 0.3;
+                if(obs3D[i].position.z < -20) { scene3D.remove(obs3D[i]); obs3D.splice(i, 1); score3D += 5; document.getElementById("score-3d").innerText = score3D; }
             }
             renderer3D.render(scene3D, camera3D);
             activeAnimFrame = requestAnimationFrame(loop3DSpace);
         }
 
-        // 3D Pong Fonksiyonları
-        function move3DPaddle(dir) { if(obj3D_1) obj3D_1.position.x += dir * 0.5; }
+        // 3D Pong Döngüsü
         function loop3DPong() {
             if(!is3DActive || currentGame3D !== 4 || currentMode !== '3d') return;
+            if(keys3D.left) { p3D.position.x -= 0.1; if(p3D.position.x < -2.5) p3D.position.x = -2.5; }
+            if(keys3D.right) { p3D.position.x += 0.1; if(p3D.position.x > 2.5) p3D.position.x = 2.5; }
+
+            let ball = obs3D[0];
+            if(ball) {
+                ball.position.x += ball.userData.dx; ball.position.z += ball.userData.dz;
+                if(ball.position.x < -2.8 || ball.position.x > 2.8) ball.userData.dx = -ball.userData.dx;
+                if(ball.position.z < -3) ball.userData.dz = -ball.userData.dz;
+
+                if(ball.position.z >= 2.2 && Math.abs(ball.position.x - p3D.position.x) < 1.2) {
+                    ball.userData.dz = -ball.userData.dz; score3D += 10; document.getElementById("score-3d").innerText = score3D;
+                } else if(ball.position.z > 3.5) {
+                    document.getElementById("score-3d").innerText = score3D + " (Kaçırdın!)"; return;
+                }
+            }
             renderer3D.render(scene3D, camera3D);
             activeAnimFrame = requestAnimationFrame(loop3DPong);
+        }
+
+        // 3D Tuğla Kırma Döngüsü
+        function loop3DBrick() {
+            if(!is3DActive || currentGame3D !== 5 || currentMode !== '3d') return;
+            if(keys3D.left) { p3D.position.x -= 0.1; if(p3D.position.x < -2.5) p3D.position.x = -2.5; }
+            if(keys3D.right) { p3D.position.x += 0.1; if(p3D.position.x > 2.5) p3D.position.x = 2.5; }
+
+            let ball = scene3D.children.find(c => c.geometry && c.geometry.type === 'SphereGeometry');
+            if(ball) {
+                ball.position.x += ball.userData.dx; ball.position.z += ball.userData.dz;
+                if(ball.position.x < -2.8 || ball.position.x > 2.8) ball.userData.dx = -ball.userData.dx;
+                if(ball.position.z < -3) ball.userData.dz = -ball.userData.dz;
+
+                if(ball.position.z >= 2.2 && Math.abs(ball.position.x - p3D.position.x) < 1.2) {
+                    ball.userData.dz = -ball.userData.dz;
+                }
+
+                for(let i=obs3D.length-1; i>=0; i--) {
+                    if(ball.position.distanceTo(obs3D[i].position) < 0.6) {
+                        scene3D.remove(obs3D[i]); obs3D.splice(i, 1); ball.userData.dz = -ball.userData.dz;
+                        score3D += 10; document.getElementById("score-3d").innerText = score3D;
+                    }
+                }
+
+                if(ball.position.z > 3.5) {
+                    document.getElementById("score-3d").innerText = score3D + " (Oyun Bitti!)"; return;
+                }
+            }
+            renderer3D.render(scene3D, camera3D);
+            activeAnimFrame = requestAnimationFrame(loop3DBrick);
         }
 
         resetSnake();
