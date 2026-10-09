@@ -16,21 +16,21 @@
             min-height: 100vh;
             padding: 15px;
         }
-        h1 { color: #38bdf8; text-align: center; margin-bottom: 15px; font-size: 1.8rem; }
-        .nav-btns { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; max-width: 420px; }
+        h1 { color: #38bdf8; text-align: center; margin-bottom: 12px; font-size: 1.8rem; }
+        .nav-btns { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; margin-bottom: 15px; max-width: 440px; }
         .nav-btn {
             background: #1e293b; border: 1.5px solid #38bdf8; color: #38bdf8;
-            padding: 8px 10px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.85rem;
+            padding: 6px 10px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.8rem;
         }
         .nav-btn.active { background: #38bdf8; color: #0f172a; }
         .card {
-            background: #1e293b; border: 1px solid #334155; padding: 20px;
+            background: #1e293b; border: 1px solid #334155; padding: 18px;
             border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             text-align: center; max-width: 380px; width: 100%; display: none;
         }
         .card.active { display: block; }
         button.action-btn {
-            margin-top: 15px; padding: 10px 20px; background: #22c55e;
+            margin-top: 12px; padding: 10px 20px; background: #22c55e;
             color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;
         }
         
@@ -41,11 +41,11 @@
         /* CANVAS OYUNLARI */
         canvas { background: #0f172a; border: 2px solid #334155; border-radius: 8px; margin-top: 10px; touch-action: none; }
         .controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; width: 180px; margin: 10px auto 0; }
-        .ctrl-btn { background: #334155; color: white; border: none; padding: 12px; border-radius: 6px; font-size: 1.1rem; }
+        .ctrl-btn { background: #334155; color: white; border: none; padding: 10px; border-radius: 6px; font-size: 1.1rem; user-select: none; -webkit-user-select: none; }
 
         /* HAFIZA */
         .memory-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 15px; }
-        .mem-card { height: 70px; background: #0f172a; border: 2px solid #334155; border-radius: 8px; font-size: 2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .mem-card { height: 65px; background: #0f172a; border: 2px solid #334155; border-radius: 8px; font-size: 2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
         /* REFLEKS */
         .click-target { width: 110px; height: 110px; background: #ef4444; border-radius: 50%; margin: 15px auto; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: bold; cursor: pointer; user-select: none; }
@@ -53,7 +53,7 @@
 </head>
 <body>
 
-    <h1>🎮 Proje Oyun Portalı</h1>
+    <h1>🎮 Arcade Oyun Portalı</h1>
     <div class="nav-btns">
         <button class="nav-btn active" onclick="switchGame(1)">🐍 Yılan</button>
         <button class="nav-btn" onclick="switchGame(2)">❌ XOX</button>
@@ -62,6 +62,8 @@
         <button class="nav-btn" onclick="switchGame(5)">🏓 Pong</button>
         <button class="nav-btn" onclick="switchGame(6)">🐤 Kuş</button>
         <button class="nav-btn" onclick="switchGame(7)">👾 Uzay</button>
+        <button class="nav-btn" onclick="switchGame(8)">🧱 Tuğla</button>
+        <button class="nav-btn" onclick="switchGame(9)">🧩 Tetris</button>
     </div>
 
     <!-- OYUN 1: YILAN -->
@@ -99,15 +101,15 @@
     <!-- OYUN 3: HAFIZA -->
     <div id="game3" class="card">
         <h2>Hafıza Oyunu</h2>
-        <div id="mem-status">Eşleşme: 0 / 4</div>
+        <div id="mem-status">Eşleşme: 0 / 6</div>
         <div class="memory-board" id="mem-board"></div>
         <button class="action-btn" onclick="resetMemory()">Yeniden Başlat</button>
     </div>
 
     <!-- OYUN 4: REFLEKS -->
     <div id="game4" class="card">
-        <h2>Refleks Testi</h2>
-        <div id="click-status">10 Saniyede Kaç Tık?</div>
+        <h2>Refleks Testi (5 Sn)</h2>
+        <div id="click-status">5 Saniyede Kaç Tık?</div>
         <div class="click-target" id="clicker" onclick="clickTarget()">BAŞLA</div>
         <div>Tıklama Sayısı: <span id="click-count">0</span></div>
         <button class="action-btn" onclick="resetClicker()">Sıfırla</button>
@@ -119,32 +121,65 @@
         <div>Skor: <span id="pong-score">0</span></div>
         <canvas id="pongCanvas" width="260" height="260"></canvas>
         <div style="margin-top: 10px; display: flex; gap: 10px; justify-content: center;">
-            <button class="ctrl-btn" style="width: 80px;" onclick="movePong(-25)">⬅️ Sol</button>
-            <button class="ctrl-btn" style="width: 80px;" onclick="movePong(25)">Sağ ➡️</button>
+            <button class="ctrl-btn" style="width: 80px;" onclick="movePong(-30)">⬅️ Sol</button>
+            <button class="ctrl-btn" style="width: 80px;" onclick="movePong(30)">Sağ ➡️</button>
         </div>
         <button class="action-btn" onclick="resetPong()">Yeniden Başlat</button>
     </div>
 
     <!-- OYUN 6: FLAPPY BIRD -->
     <div id="game6" class="card">
-        <h2>Engelden Kaçış</h2>
+        <h2>Kuş Oyunu</h2>
         <div>Skor: <span id="bird-score">0</span></div>
         <canvas id="birdCanvas" width="260" height="260" onclick="jumpBird()"></canvas>
         <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 5px;">Zıplamak için kutunun içine tıkla!</p>
         <button class="action-btn" onclick="resetBird()">Yeniden Başlat</button>
     </div>
 
-    <!-- OYUN 7: UZAY SAVAŞI -->
+    <!-- OYUN 7: UZAY SAVAŞI (ÇOĞUL DOKUNMA DESTEKLİ) -->
     <div id="game7" class="card">
         <h2>Uzay Savaşı</h2>
         <div>Skor: <span id="space-score">0</span></div>
         <canvas id="spaceCanvas" width="260" height="260"></canvas>
         <div style="margin-top: 10px; display: flex; gap: 10px; justify-content: center;">
-            <button class="ctrl-btn" style="width: 70px;" onclick="moveShip(-20)">⬅️</button>
-            <button class="ctrl-btn" style="width: 80px; background: #ef4444;" onclick="shootBullet()">🔥</button>
-            <button class="ctrl-btn" style="width: 70px;" onclick="moveShip(20)">➡️</button>
+            <button class="ctrl-btn" style="width: 70px;" 
+                ontouchstart="spaceKeys.left=true" ontouchend="spaceKeys.left=false"
+                onmousedown="spaceKeys.left=true" onmouseup="spaceKeys.left=false">⬅️</button>
+            
+            <button class="ctrl-btn" style="width: 80px; background: #ef4444;" 
+                ontouchstart="shootBullet()" onclick="shootBullet()">🔥</button>
+            
+            <button class="ctrl-btn" style="width: 70px;" 
+                ontouchstart="spaceKeys.right=true" ontouchend="spaceKeys.right=false"
+                onmousedown="spaceKeys.right=true" onmouseup="spaceKeys.right=false">➡️</button>
         </div>
         <button class="action-btn" onclick="resetSpace()">Yeniden Başlat</button>
+    </div>
+
+    <!-- OYUN 8: TUĞLA KIRMA (ARKANOID) -->
+    <div id="game8" class="card">
+        <h2>Tuğla Kırma</h2>
+        <div>Skor: <span id="brick-score">0</span></div>
+        <canvas id="brickCanvas" width="260" height="260"></canvas>
+        <div style="margin-top: 10px; display: flex; gap: 10px; justify-content: center;">
+            <button class="ctrl-btn" style="width: 80px;" onclick="moveBrickPaddle(-25)">⬅️ Sol</button>
+            <button class="ctrl-btn" style="width: 80px;" onclick="moveBrickPaddle(25)">Sağ ➡️</button>
+        </div>
+        <button class="action-btn" onclick="resetBrick()">Yeniden Başlat</button>
+    </div>
+
+    <!-- OYUN 9: TETRİS -->
+    <div id="game9" class="card">
+        <h2>Tetris</h2>
+        <div>Skor: <span id="tetris-score">0</span></div>
+        <canvas id="tetrisCanvas" width="200" height="260"></canvas>
+        <div style="margin-top: 10px; display: flex; gap: 5px; justify-content: center;">
+            <button class="ctrl-btn" style="width: 50px;" onclick="moveTetris(-1)">⬅️</button>
+            <button class="ctrl-btn" style="width: 60px; background: #38bdf8;" onclick="rotateTetris()">🔄</button>
+            <button class="ctrl-btn" style="width: 50px;" onclick="moveTetris(1)">➡️</button>
+            <button class="ctrl-btn" style="width: 50px; background: #22c55e;" onclick="dropTetris()">⬇️</button>
+        </div>
+        <button class="action-btn" onclick="resetTetris()">Yeniden Başlat</button>
     </div>
 
     <script>
@@ -169,6 +204,8 @@
             if(num === 5) resetPong();
             if(num === 6) resetBird();
             if(num === 7) resetSpace();
+            if(num === 8) resetBrick();
+            if(num === 9) resetTetris();
         }
 
         /* --- XOX --- */
@@ -191,7 +228,7 @@
             document.querySelectorAll(".xox-cell").forEach(c => c.innerText = "");
         }
 
-        /* --- YILAN --- */
+        /* --- YILAN (NORMAL HIZ) --- */
         const sCanvas = document.getElementById("snakeCanvas");
         const sCtx = sCanvas.getContext("2d");
         let snake, food, dir, sScore;
@@ -199,7 +236,7 @@
             clearAllTimers();
             snake = [{x: 5, y: 5}]; food = {x: 2, y: 2}; dir = "RIGHT"; sScore = 0;
             document.getElementById("snake-score").innerText = sScore;
-            let loop = setInterval(drawSnake, 160);
+            let loop = setInterval(drawSnake, 150); // İdeal kıvama çekildi
             activeIntervals.push(loop);
         }
         function setDir(d) {
@@ -227,12 +264,12 @@
             sCtx.fillStyle = "#22c55e"; snake.forEach(s => sCtx.fillRect(s.x*20, s.y*20, 18, 18));
         }
 
-        /* --- HAFIZA --- */
-        const emojis = ["🚀","🚀","👾","👾","🔥","🔥","⚡","⚡"];
+        /* --- HAFIZA OYUNU --- */
+        const emojis = ["🚀","🚀","👾","👾","🔥","🔥","⚡","⚡","👑","👑","🎮","🎮"];
         let flipped = [], matchedCount = 0;
         function resetMemory() {
             matchedCount = 0; flipped = [];
-            document.getElementById("mem-status").innerText = "Eşleşme: 0 / 4";
+            document.getElementById("mem-status").innerText = "Eşleşme: 0 / 6";
             const boardEl = document.getElementById("mem-board");
             boardEl.innerHTML = "";
             let shuffled = [...emojis].sort(() => Math.random() - 0.5);
@@ -251,31 +288,31 @@
                 if(flipped.length === 2) {
                     if(flipped[0].dataset.val === flipped[1].dataset.val) {
                         matchedCount++;
-                        document.getElementById("mem-status").innerText = `Eşleşme: ${matchedCount} / 4`;
+                        document.getElementById("mem-status").innerText = `Eşleşme: ${matchedCount} / 6`;
                         flipped = [];
-                        if(matchedCount === 4) document.getElementById("mem-status").innerText = "Tebrikler! Kazandın 🎉";
+                        if(matchedCount === 6) document.getElementById("mem-status").innerText = "Tebrikler! Kazandın 🎉";
                     } else {
                         setTimeout(() => {
                             if(flipped[0]) flipped[0].innerText = "";
                             if(flipped[1]) flipped[1].innerText = "";
                             flipped = [];
-                        }, 700);
+                        }, 500);
                     }
                 }
             }
         }
 
-        /* --- REFLEKS --- */
-        let clicks = 0, timeLeft = 10, clickActive = false;
+        /* --- REFLEKS TESTİ --- */
+        let clicks = 0, timeLeft = 5, clickActive = false;
         function resetClicker() {
             clearAllTimers();
-            clicks = 0; timeLeft = 10; clickActive = false;
+            clicks = 0; timeLeft = 5; clickActive = false;
             document.getElementById("click-count").innerText = "0";
-            document.getElementById("click-status").innerText = "10 Saniyede Kaç Tık?";
+            document.getElementById("click-status").innerText = "5 Saniyede Kaç Tık?";
             document.getElementById("clicker").innerText = "BAŞLA";
         }
         function clickTarget() {
-            if(!clickActive && timeLeft === 10) {
+            if(!clickActive && timeLeft === 5) {
                 clickActive = true;
                 document.getElementById("clicker").innerText = "TIKLA!";
                 let timer = setInterval(() => {
@@ -295,12 +332,12 @@
         /* --- PING PONG --- */
         const pCanvas = document.getElementById("pongCanvas");
         const pCtx = pCanvas.getContext("2d");
-        let paddleX = 100, ballX = 130, ballY = 100, ballDX = 3, ballDY = -3, pScore = 0;
+        let paddleX = 100, ballX = 130, ballY = 100, ballDX = 4, ballDY = -4, pScore = 0;
         function resetPong() {
             clearAllTimers();
-            paddleX = 100; ballX = 130; ballY = 100; ballDX = 3; ballDY = -3; pScore = 0;
+            paddleX = 100; ballX = 130; ballY = 100; ballDX = 4; ballDY = -4; pScore = 0;
             document.getElementById("pong-score").innerText = pScore;
-            let loop = setInterval(drawPong, 20);
+            let loop = setInterval(drawPong, 18);
             activeIntervals.push(loop);
         }
         function movePong(dir) {
@@ -325,7 +362,7 @@
             }
         }
 
-        /* --- FLAPPY BIRD DÜZELTİLDİ --- */
+        /* --- FLAPPY BIRD --- */
         const bCanvas = document.getElementById("birdCanvas");
         const bCtx = bCanvas.getContext("2d");
         let birdY = 130, velocity = 0, pipes = [], bScore = 0, pipeTimer = 0;
@@ -333,86 +370,84 @@
             clearAllTimers();
             birdY = 130; velocity = 0; pipes = []; bScore = 0; pipeTimer = 0;
             document.getElementById("bird-score").innerText = bScore;
-            let loop = setInterval(drawBird, 25);
+            let loop = setInterval(drawBird, 22);
             activeIntervals.push(loop);
         }
-        function jumpBird() { velocity = -5.5; }
+        function jumpBird() { velocity = -6; }
         function drawBird() {
-            velocity += 0.35; birdY += velocity;
+            velocity += 0.45; birdY += velocity;
             pipeTimer++;
-            if(pipeTimer > 75) {
+            if(pipeTimer > 65) {
                 pipeTimer = 0;
-                let gap = 90;
-                let topH = Math.floor(Math.random() * 100) + 30;
+                let gap = 80;
+                let topH = Math.floor(Math.random() * 110) + 30;
                 pipes.push({x: 260, top: topH, bottom: topH + gap, passed: false});
             }
             bCtx.fillStyle = "#0f172a"; bCtx.fillRect(0, 0, 260, 260);
             bCtx.fillStyle = "#facc15"; bCtx.beginPath(); bCtx.arc(50, birdY, 8, 0, Math.PI*2); bCtx.fill();
 
             for(let i = pipes.length - 1; i >= 0; i--) {
-                pipes[i].x -= 2;
+                pipes[i].x -= 2.5;
                 bCtx.fillStyle = "#22c55e";
-                bCtx.fillRect(pipes[i].x, 0, 30, pipes[i].top);
-                bCtx.fillRect(pipes[i].x, pipes[i].bottom, 30, 260 - pipes[i].bottom);
+                bCtx.fillRect(pipes[i].x, 0, 32, pipes[i].top);
+                bCtx.fillRect(pipes[i].x, pipes[i].bottom, 32, 260 - pipes[i].bottom);
 
                 if(!pipes[i].passed && pipes[i].x < 50) {
                     pipes[i].passed = true; bScore++;
                     document.getElementById("bird-score").innerText = bScore;
                 }
-                if(50 >= pipes[i].x && 50 <= pipes[i].x+30 && (birdY <= pipes[i].top || birdY >= pipes[i].bottom)) {
+                if(50 >= pipes[i].x && 50 <= pipes[i].x+32 && (birdY <= pipes[i].top || birdY >= pipes[i].bottom)) {
                     clearAllTimers(); document.getElementById("bird-score").innerText = bScore + " (Oyun Bitti!)"; return;
                 }
-                if(pipes[i].x < -30) pipes.splice(i, 1);
+                if(pipes[i].x < -32) pipes.splice(i, 1);
             }
             if(birdY <= 0 || birdY >= 260) {
                 clearAllTimers(); document.getElementById("bird-score").innerText = bScore + " (Oyun Bitti!)";
             }
         }
 
-        /* --- UZAY SAVAŞI --- */
+        /* --- UZAY SAVAŞI (ÇOĞUL DOKUNMA MANTIĞI) --- */
         const spCanvas = document.getElementById("spaceCanvas");
         const spCtx = spCanvas.getContext("2d");
         let shipX = 115, bullets = [], aliens = [], spScore = 0, alienTimer = 0;
+        let spaceKeys = { left: false, right: false };
+
         function resetSpace() {
             clearAllTimers();
             shipX = 115; bullets = []; aliens = []; spScore = 0; alienTimer = 0;
+            spaceKeys = { left: false, right: false };
             document.getElementById("space-score").innerText = spScore;
-            let loop = setInterval(drawSpace, 30);
+            let loop = setInterval(drawSpace, 25);
             activeIntervals.push(loop);
         }
-        function moveShip(dir) {
-            shipX += dir;
-            if(shipX < 0) shipX = 0;
-            if(shipX > 230) shipX = 230;
+        function shootBullet() {
+            if(currentGame === 7) bullets.push({x: shipX + 13, y: 230});
         }
-        function shootBullet() { bullets.push({x: shipX + 13, y: 230}); }
         function drawSpace() {
+            if(spaceKeys.left) { shipX -= 4; if(shipX < 0) shipX = 0; }
+            if(spaceKeys.right) { shipX += 4; if(shipX > 230) shipX = 230; }
+
             alienTimer++;
-            if(alienTimer > 40) {
+            if(alienTimer > 25) {
                 alienTimer = 0;
                 aliens.push({x: Math.floor(Math.random() * 230), y: 0});
             }
             spCtx.fillStyle = "#0f172a"; spCtx.fillRect(0, 0, 260, 260);
-            
-            // Gemi
             spCtx.fillStyle = "#38bdf8"; spCtx.fillRect(shipX, 240, 30, 12);
             spCtx.fillRect(shipX + 11, 232, 8, 8);
 
-            // Mermiler
             spCtx.fillStyle = "#ef4444";
             for(let i = bullets.length - 1; i >= 0; i--) {
-                bullets[i].y -= 5;
+                bullets[i].y -= 7;
                 spCtx.fillRect(bullets[i].x, bullets[i].y, 4, 8);
                 if(bullets[i].y < 0) bullets.splice(i, 1);
             }
 
-            // Uzaylılar
             spCtx.fillStyle = "#a855f7";
             for(let a = aliens.length - 1; a >= 0; a--) {
-                aliens[a].y += 1.5;
+                aliens[a].y += 2;
                 spCtx.fillRect(aliens[a].x, aliens[a].y, 25, 15);
 
-                // Mermi Vuruşu
                 for(let b = bullets.length - 1; b >= 0; b--) {
                     if(bullets[b].x >= aliens[a].x && bullets[b].x <= aliens[a].x + 25 &&
                        bullets[b].y >= aliens[a].y && bullets[b].y <= aliens[a].y + 15) {
@@ -424,6 +459,141 @@
 
                 if(aliens[a] && aliens[a].y > 230) {
                     clearAllTimers(); document.getElementById("space-score").innerText = spScore + " (Dünya İstila Edildi!)"; return;
+                }
+            }
+        }
+
+        /* --- TUĞLA KIRMA --- */
+        const brCanvas = document.getElementById("brickCanvas");
+        const brCtx = brCanvas.getContext("2d");
+        let brPaddleX = 100, brBallX = 130, brBallY = 180, brBallDX = 3, brBallDY = -3, brScore = 0, bricks = [];
+        function resetBrick() {
+            clearAllTimers();
+            brPaddleX = 100; brBallX = 130; brBallY = 180; brBallDX = 3; brBallDY = -3; brScore = 0;
+            bricks = [];
+            for(let r=0; r<4; r++) {
+                for(let c=0; c<5; c++) {
+                    bricks.push({x: c*48 + 12, y: r*20 + 30, status: 1});
+                }
+            }
+            document.getElementById("brick-score").innerText = brScore;
+            let loop = setInterval(drawBrick, 20);
+            activeIntervals.push(loop);
+        }
+        function moveBrickPaddle(dir) {
+            brPaddleX += dir;
+            if(brPaddleX < 0) brPaddleX = 0;
+            if(brPaddleX > 200) brPaddleX = 200;
+        }
+        function drawBrick() {
+            brCtx.fillStyle = "#0f172a"; brCtx.fillRect(0, 0, 260, 260);
+            brCtx.fillStyle = "#38bdf8"; brCtx.fillRect(brPaddleX, 245, 60, 10);
+            brCtx.fillStyle = "#facc15"; brCtx.beginPath(); brCtx.arc(brBallX, brBallY, 6, 0, Math.PI*2); brCtx.fill();
+
+            bricks.forEach(b => {
+                if(b.status === 1) {
+                    brCtx.fillStyle = "#ef4444";
+                    brCtx.fillRect(b.x, b.y, 42, 15);
+
+                    if(brBallX >= b.x && brBallX <= b.x + 42 && brBallY >= b.y && brBallY <= b.y + 15) {
+                        brBallDY = -brBallDY; b.status = 0; brScore += 10;
+                        document.getElementById("brick-score").innerText = brScore;
+                    }
+                }
+            });
+
+            brBallX += brBallDX; brBallY += brBallDY;
+            if(brBallX <= 6 || brBallX >= 254) brBallDX = -brBallDX;
+            if(brBallY <= 6) brBallDY = -brBallDY;
+            if(brBallY >= 239 && brBallX >= brPaddleX && brBallX <= brPaddleX + 60) brBallDY = -brBallDY;
+            else if(brBallY >= 254) {
+                clearAllTimers(); document.getElementById("brick-score").innerText = brScore + " (Oyun Bitti!)";
+            }
+        }
+
+        /* --- TETRİS --- */
+        const tCanvas = document.getElementById("tetrisCanvas");
+        const tCtx = tCanvas.getContext("2d");
+        const ROWS = 13, COLS = 10, SQ = 20;
+        let tGrid = [], currentPiece, tScore = 0;
+        const PIECES = [
+            [[1,1,1,1]],
+            [[1,1],[1,1]],
+            [[0,1,0],[1,1,1]],
+            [[1,0,0],[1,1,1]],
+            [[0,0,1],[1,1,1]]
+        ];
+        function resetTetris() {
+            clearAllTimers();
+            tGrid = Array.from({length: ROWS}, () => Array(COLS).fill(0));
+            tScore = 0; document.getElementById("tetris-score").innerText = tScore;
+            spawnPiece();
+            let loop = setInterval(drawTetris, 400);
+            activeIntervals.push(loop);
+        }
+        function spawnPiece() {
+            let shape = PIECES[Math.floor(Math.random() * PIECES.length)];
+            currentPiece = {shape, x: 3, y: 0};
+        }
+        function moveTetris(dir) {
+            currentPiece.x += dir;
+            if(collision()) currentPiece.x -= dir;
+            drawTetrisBoard();
+        }
+        function rotateTetris() {
+            let rotated = currentPiece.shape[0].map((_, i) => currentPiece.shape.map(row => row[i]).reverse());
+            let old = currentPiece.shape; currentPiece.shape = rotated;
+            if(collision()) currentPiece.shape = old;
+            drawTetrisBoard();
+        }
+        function dropTetris() {
+            currentPiece.y++;
+            if(collision()) {
+                currentPiece.y--;
+                mergePiece();
+                spawnPiece();
+                if(collision()) { clearAllTimers(); document.getElementById("tetris-score").innerText = tScore + " (Bitti!)"; }
+            }
+            drawTetrisBoard();
+        }
+        function collision() {
+            for(let r=0; r<currentPiece.shape.length; r++) {
+                for(let c=0; c<currentPiece.shape[r].length; c++) {
+                    if(currentPiece.shape[r][c]) {
+                        let newX = currentPiece.x + c, newY = currentPiece.y + r;
+                        if(newX < 0 || newX >= COLS || newY >= ROWS || (newY >= 0 && tGrid[newY][newX])) return true;
+                    }
+                }
+            }
+            return false;
+        }
+        function mergePiece() {
+            for(let r=0; r<currentPiece.shape.length; r++) {
+                for(let c=0; c<currentPiece.shape[r].length; c++) {
+                    if(currentPiece.shape[r][c]) tGrid[currentPiece.y + r][currentPiece.x + c] = 1;
+                }
+            }
+            for(let r=ROWS-1; r>=0; r--) {
+                if(tGrid[r].every(val => val === 1)) {
+                    tGrid.splice(r, 1); tGrid.unshift(Array(COLS).fill(0));
+                    tScore += 20; document.getElementById("tetris-score").innerText = tScore;
+                }
+            }
+        }
+        function drawTetris() { dropTetris(); }
+        function drawTetrisBoard() {
+            tCtx.fillStyle = "#0f172a"; tCtx.fillRect(0, 0, 200, 260);
+            for(let r=0; r<ROWS; r++) {
+                for(let c=0; c<COLS; c++) {
+                    if(tGrid[r][c]) { tCtx.fillStyle = "#38bdf8"; tCtx.fillRect(c*SQ, r*SQ, SQ-1, SQ-1); }
+                }
+            }
+            if(currentPiece) {
+                tCtx.fillStyle = "#22c55e";
+                for(let r=0; r<currentPiece.shape.length; r++) {
+                    for(let c=0; c<currentPiece.shape[r].length; c++) {
+                        if(currentPiece.shape[r][c]) tCtx.fillRect((currentPiece.x+c)*SQ, (currentPiece.y+r)*SQ, SQ-1, SQ-1);
+                    }
                 }
             }
         }
