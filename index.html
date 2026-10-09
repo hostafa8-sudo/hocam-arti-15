@@ -296,6 +296,49 @@
     </footer>
 
     <script>
+        /* === SES MOTORU (WEB AUDIO API) === */
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'score') {
+                osc.type = 'sine'; osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+            } else if (type === 'hit') {
+                osc.type = 'square'; osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.08);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.08);
+            } else if (type === 'shoot') {
+                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.12);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.12);
+            } else if (type === 'jump') {
+                osc.type = 'sine'; osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.15);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.15);
+            } else if (type === 'gameover') {
+                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.4);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+            }
+        }
+
         let currentMode = '2d';
         let currentGame2D = 1;
         let currentGame3D = 1;
@@ -334,7 +377,7 @@
             document.querySelectorAll(".card").forEach(c => c.classList.remove("active"));
             document.querySelectorAll("#nav-2d .nav-btn").forEach(b => b.classList.remove("active"));
             document.getElementById("game" + num).classList.add("active");
-            event.target.classList.add("active");
+            if(event && event.target) event.target.classList.add("active");
             if(num === 1) resetSnake();
             if(num === 3) resetMemory();
             if(num === 4) resetClicker();
@@ -355,10 +398,11 @@
         const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
         function makeMove(i) {
             if(board[i] === "" && isXOXActive) {
+                playSound('hit');
                 board[i] = currentPlayer;
                 document.querySelectorAll(".xox-cell")[i].innerText = currentPlayer;
                 let won = wins.some(w => board[w[0]] && board[w[0]]===board[w[1]] && board[w[0]]===board[w[2]]);
-                if(won) { document.getElementById("xox-status").innerText = `Kazanan: ${currentPlayer} 🎉`; isXOXActive = false; return; }
+                if(won) { playSound('score'); document.getElementById("xox-status").innerText = `Kazanan: ${currentPlayer} 🎉`; isXOXActive = false; return; }
                 if(!board.includes("")) { document.getElementById("xox-status").innerText = "Berabere! 🤝"; isXOXActive = false; return; }
                 currentPlayer = currentPlayer === "X" ? "O" : "X";
                 document.getElementById("xox-status").innerText = `Sıra: ${currentPlayer}`;
@@ -391,10 +435,12 @@
             if(dir==="UP") head.y--; if(dir==="DOWN") head.y++;
             if(dir==="LEFT") head.x--; if(dir==="RIGHT") head.x++;
             if(head.x<0 || head.x>=13 || head.y<0 || head.y>=13 || snake.some(s=>s.x===head.x && s.y===head.y)) {
+                playSound('gameover');
                 stopAllGames(); document.getElementById("snake-score").innerText = sScore + " (Oyun Bitti!)"; return;
             }
             snake.unshift(head);
             if(head.x===food.x && head.y===food.y) {
+                playSound('score');
                 sScore += 10; document.getElementById("snake-score").innerText = sScore;
                 food = {x: Math.floor(Math.random()*13), y: Math.floor(Math.random()*13)};
             } else { snake.pop(); }
@@ -419,9 +465,11 @@
         }
         function flipCard(card) {
             if(flipped.length < 2 && !card.innerText) {
+                playSound('hit');
                 card.innerText = card.dataset.val; flipped.push(card);
                 if(flipped.length === 2) {
                     if(flipped[0].dataset.val === flipped[1].dataset.val) {
+                        playSound('score');
                         matchedCount++; document.getElementById("mem-status").innerText = `Eşleşme: ${matchedCount} / 8`;
                         flipped = []; if(matchedCount === 8) document.getElementById("mem-status").innerText = "Tebrikler! Kazandın 🎉";
                     } else {
@@ -448,10 +496,10 @@
                 clickActive = true; document.getElementById("clicker").innerText = "TIKLA!";
                 let timer = setInterval(() => {
                     timeLeft--; document.getElementById("click-status").innerText = `Kalan Süre: ${timeLeft}s`;
-                    if(timeLeft <= 0) { stopAllGames(); clickActive = false; document.getElementById("click-status").innerText = "Süre Bitti!"; document.getElementById("clicker").innerText = "BİTTİ"; }
+                    if(timeLeft <= 0) { playSound('gameover'); stopAllGames(); clickActive = false; document.getElementById("click-status").innerText = "Süre Bitti!"; document.getElementById("clicker").innerText = "BİTTİ"; }
                 }, 1000); activeIntervals.push(timer);
             }
-            if(clickActive) { clicks++; document.getElementById("click-count").innerText = clicks; }
+            if(clickActive) { playSound('hit'); clicks++; document.getElementById("click-count").innerText = clicks; }
         }
 
         /* --- PING PONG 2D --- */
@@ -473,8 +521,8 @@
             ballX += ballDX; ballY += ballDY;
             if(ballX <= 6 || ballX >= 254) ballDX = -ballDX;
             if(ballY <= 6) ballDY = -ballDY;
-            if(ballY >= 239 && ballX >= paddleX && ballX <= paddleX + 60) { ballDY = -ballDY; pScore += 10; document.getElementById("pong-score").innerText = pScore; }
-            else if(ballY >= 254) { document.getElementById("pong-score").innerText = pScore + " (Oyun Bitti!)"; return; }
+            if(ballY >= 239 && ballX >= paddleX && ballX <= paddleX + 60) { playSound('score'); ballDY = -ballDY; pScore += 10; document.getElementById("pong-score").innerText = pScore; }
+            else if(ballY >= 254) { playSound('gameover'); document.getElementById("pong-score").innerText = pScore + " (Oyun Bitti!)"; return; }
             activeAnimFrame = requestAnimationFrame(loopPong);
         }
 
@@ -483,7 +531,7 @@
         const bCtx = bCanvas.getContext("2d");
         let birdY = 130, velocity = 0, pipes = [], bScore = 0, pipeTimer = 0;
         function resetBird() { stopAllGames(); birdY = 130; velocity = 0; pipes = []; bScore = 0; pipeTimer = 0; document.getElementById("bird-score").innerText = bScore; loopBird(); }
-        function jumpBird() { velocity = -5.5; }
+        function jumpBird() { playSound('jump'); velocity = -5.5; }
         function loopBird() {
             if(currentGame2D !== 6 || currentMode !== '2d') return;
             velocity += 0.4; birdY += velocity; pipeTimer++;
@@ -493,11 +541,11 @@
             let speed = 2.2 + (bScore * 0.1);
             for(let i = pipes.length - 1; i >= 0; i--) {
                 pipes[i].x -= speed; bCtx.fillStyle = "#22c55e"; bCtx.fillRect(pipes[i].x, 0, 32, pipes[i].top); bCtx.fillRect(pipes[i].x, pipes[i].bottom, 32, 260 - pipes[i].bottom);
-                if(!pipes[i].passed && pipes[i].x < 50) { pipes[i].passed = true; bScore++; document.getElementById("bird-score").innerText = bScore; }
-                if(50 >= pipes[i].x && 50 <= pipes[i].x+32 && (birdY <= pipes[i].top || birdY >= pipes[i].bottom)) { document.getElementById("bird-score").innerText = bScore + " (Oyun Bitti!)"; return; }
+                if(!pipes[i].passed && pipes[i].x < 50) { playSound('score'); pipes[i].passed = true; bScore++; document.getElementById("bird-score").innerText = bScore; }
+                if(50 >= pipes[i].x && 50 <= pipes[i].x+32 && (birdY <= pipes[i].top || birdY >= pipes[i].bottom)) { playSound('gameover'); document.getElementById("bird-score").innerText = bScore + " (Oyun Bitti!)"; return; }
                 if(pipes[i].x < -32) pipes.splice(i, 1);
             }
-            if(birdY <= 0 || birdY >= 260) { document.getElementById("bird-score").innerText = bScore + " (Oyun Bitti!)"; return; }
+            if(birdY <= 0 || birdY >= 260) { playSound('gameover'); document.getElementById("bird-score").innerText = bScore + " (Oyun Bitti!)"; return; }
             activeAnimFrame = requestAnimationFrame(loopBird);
         }
 
@@ -507,7 +555,7 @@
         let shipX = 115, bullets = [], aliens = [], spScore = 0, alienTimer = 0;
         let spaceKeys = { left: false, right: false };
         function resetSpace() { stopAllGames(); shipX = 115; bullets = []; aliens = []; spScore = 0; alienTimer = 0; spaceKeys = { left: false, right: false }; document.getElementById("space-score").innerText = spScore; loopSpace(); }
-        function shootBullet() { if(currentGame2D === 7) bullets.push({x: shipX + 13, y: 230}); }
+        function shootBullet() { if(currentGame2D === 7) { playSound('shoot'); bullets.push({x: shipX + 13, y: 230}); } }
         function loopSpace() {
             if(currentGame2D !== 7 || currentMode !== '2d') return;
             if(spaceKeys.left) { shipX -= 4; if(shipX < 0) shipX = 0; }
@@ -522,10 +570,10 @@
                 aliens[a].y += 2; spCtx.fillRect(aliens[a].x, aliens[a].y, 25, 15);
                 for(let b = bullets.length - 1; b >= 0; b--) {
                     if(bullets[b].x >= aliens[a].x && bullets[b].x <= aliens[a].x + 25 && bullets[b].y >= aliens[a].y && bullets[b].y <= aliens[a].y + 15) {
-                        aliens.splice(a, 1); bullets.splice(b, 1); spScore += 10; document.getElementById("space-score").innerText = spScore; break;
+                        playSound('score'); aliens.splice(a, 1); bullets.splice(b, 1); spScore += 10; document.getElementById("space-score").innerText = spScore; break;
                     }
                 }
-                if(aliens[a] && aliens[a].y > 230) { document.getElementById("space-score").innerText = spScore + " (Dünya İstila Edildi!)"; return; }
+                if(aliens[a] && aliens[a].y > 230) { playSound('gameover'); document.getElementById("space-score").innerText = spScore + " (Dünya İstila Edildi!)"; return; }
             }
             activeAnimFrame = requestAnimationFrame(loopSpace);
         }
@@ -546,14 +594,14 @@
             bricks.forEach(b => {
                 if(b.status === 1) {
                     brCtx.fillStyle = "#ef4444"; brCtx.fillRect(b.x, b.y, 42, 15);
-                    if(brBallX >= b.x && brBallX <= b.x + 42 && brBallY >= b.y && brBallY <= b.y + 15) { brBallDY = -brBallDY; b.status = 0; brScore += 10; document.getElementById("brick-score").innerText = brScore; }
+                    if(brBallX >= b.x && brBallX <= b.x + 42 && brBallY >= b.y && brBallY <= b.y + 15) { playSound('hit'); brBallDY = -brBallDY; b.status = 0; brScore += 10; document.getElementById("brick-score").innerText = brScore; }
                 }
             });
             brBallX += brBallDX; brBallY += brBallDY;
             if(brBallX <= 6 || brBallX >= 254) brBallDX = -brBallDX;
             if(brBallY <= 6) brBallDY = -brBallDY;
-            if(brBallY >= 239 && brBallX >= brPaddleX && brBallX <= brPaddleX + 60) brBallDY = -brBallDY;
-            else if(brBallY >= 254) { document.getElementById("brick-score").innerText = brScore + " (Oyun Bitti!)"; return; }
+            if(brBallY >= 239 && brBallX >= brPaddleX && brBallX <= brPaddleX + 60) { playSound('score'); brBallDY = -brBallDY; }
+            else if(brBallY >= 254) { playSound('gameover'); document.getElementById("brick-score").innerText = brScore + " (Oyun Bitti!)"; return; }
             activeAnimFrame = requestAnimationFrame(loopBrick);
         }
 
@@ -565,11 +613,11 @@
         const PIECES = [[[1,1,1,1]], [[1,1],[1,1]], [[0,1,0],[1,1,1]], [[1,0,0],[1,1,1]], [[0,0,1],[1,1,1]]];
         function resetTetris() { stopAllGames(); tGrid = Array.from({length: ROWS}, () => Array(COLS).fill(0)); tScore = 0; document.getElementById("tetris-score").innerText = tScore; spawnPiece(); let loop = setInterval(drawTetris, 400); activeIntervals.push(loop); }
         function spawnPiece() { currentPiece = {shape: PIECES[Math.floor(Math.random() * PIECES.length)], x: 3, y: 0}; }
-        function moveTetris(dir) { currentPiece.x += dir; if(collision()) currentPiece.x -= dir; drawTetrisBoard(); }
-        function rotateTetris() { let rotated = currentPiece.shape[0].map((_, i) => currentPiece.shape.map(row => row[i]).reverse()); let old = currentPiece.shape; currentPiece.shape = rotated; if(collision()) currentPiece.shape = old; drawTetrisBoard(); }
-        function dropTetris() { currentPiece.y++; if(collision()) { currentPiece.y--; mergePiece(); spawnPiece(); if(collision()) { stopAllGames(); document.getElementById("tetris-score").innerText = tScore + " (Bitti!)"; } } drawTetrisBoard(); }
+        function moveTetris(dir) { playSound('hit'); currentPiece.x += dir; if(collision()) currentPiece.x -= dir; drawTetrisBoard(); }
+        function rotateTetris() { playSound('hit'); let rotated = currentPiece.shape[0].map((_, i) => currentPiece.shape.map(row => row[i]).reverse()); let old = currentPiece.shape; currentPiece.shape = rotated; if(collision()) currentPiece.shape = old; drawTetrisBoard(); }
+        function dropTetris() { currentPiece.y++; if(collision()) { currentPiece.y--; mergePiece(); spawnPiece(); if(collision()) { playSound('gameover'); stopAllGames(); document.getElementById("tetris-score").innerText = tScore + " (Bitti!)"; } } drawTetrisBoard(); }
         function collision() { for(let r=0; r<currentPiece.shape.length; r++) { for(let c=0; c<currentPiece.shape[r].length; c++) { if(currentPiece.shape[r][c]) { let newX = currentPiece.x + c, newY = currentPiece.y + r; if(newX < 0 || newX >= COLS || newY >= ROWS || (newY >= 0 && tGrid[newY][newX])) return true; } } } return false; }
-        function mergePiece() { for(let r=0; r<currentPiece.shape.length; r++) { for(let c=0; c<currentPiece.shape[r].length; c++) { if(currentPiece.shape[r][c]) tGrid[currentPiece.y + r][currentPiece.x + c] = 1; } } for(let r=ROWS-1; r>=0; r--) { if(tGrid[r].every(val => val === 1)) { tGrid.splice(r, 1); tGrid.unshift(Array(COLS).fill(0)); tScore += 20; document.getElementById("tetris-score").innerText = tScore; } } }
+        function mergePiece() { for(let r=0; r<currentPiece.shape.length; r++) { for(let c=0; c<currentPiece.shape[r].length; c++) { if(currentPiece.shape[r][c]) tGrid[currentPiece.y + r][currentPiece.x + c] = 1; } } for(let r=ROWS-1; r>=0; r--) { if(tGrid[r].every(val => val === 1)) { playSound('score'); tGrid.splice(r, 1); tGrid.unshift(Array(COLS).fill(0)); tScore += 20; document.getElementById("tetris-score").innerText = tScore; } } }
         function drawTetris() { dropTetris(); }
         function drawTetrisBoard() { tCtx.fillStyle = "#0f172a"; tCtx.fillRect(0, 0, 200, 260); for(let r=0; r<ROWS; r++) { for(let c=0; c<COLS; c++) { if(tGrid[r][c]) { tCtx.fillStyle = "#38bdf8"; tCtx.fillRect(c*SQ, r*SQ, SQ-1, SQ-1); } } } if(currentPiece) { tCtx.fillStyle = "#22c55e"; for(let r=0; r<currentPiece.shape.length; r++) { for(let c=0; c<currentPiece.shape[r].length; c++) { if(currentPiece.shape[r][c]) tCtx.fillRect((currentPiece.x+c)*SQ, (currentPiece.y+r)*SQ, SQ-1, SQ-1); } } } }
 
@@ -580,7 +628,7 @@
         function resetTarget() { stopAllGames(); tgScore = 0; document.getElementById("target-score").innerText = tgScore; spawnTarget(); }
         function spawnTarget() { targetX = Math.floor(Math.random() * 200) + 30; targetY = Math.floor(Math.random() * 200) + 30; drawTargetBoard(); }
         function drawTargetBoard() { tgCtx.fillStyle = "#0f172a"; tgCtx.fillRect(0, 0, 260, 260); tgCtx.fillStyle = "#ef4444"; tgCtx.beginPath(); tgCtx.arc(targetX, targetY, 18, 0, Math.PI*2); tgCtx.fill(); tgCtx.fillStyle = "#ffffff"; tgCtx.beginPath(); tgCtx.arc(targetX, targetY, 10, 0, Math.PI*2); tgCtx.fill(); }
-        function hitTarget(e) { let rect = tgCanvas.getBoundingClientRect(); let dist = Math.hypot((e.clientX - rect.left) - targetX, (e.clientY - rect.top) - targetY); if(dist <= 20) { tgScore += 10; document.getElementById("target-score").innerText = tgScore; spawnTarget(); } }
+        function hitTarget(e) { let rect = tgCanvas.getBoundingClientRect(); let dist = Math.hypot((e.clientX - rect.left) - targetX, (e.clientY - rect.top) - targetY); if(dist <= 20) { playSound('score'); tgScore += 10; document.getElementById("target-score").innerText = tgScore; spawnTarget(); } else { playSound('hit'); } }
 
         /* --- SONSUZ ZIPLAMA 2D --- */
         const jCanvas = document.getElementById("jumpCanvas");
@@ -594,8 +642,8 @@
             if(jumpKeys.right) { playerX += 4; if(playerX > 245) playerX = 245; }
             pVy += 0.35; playerY += pVy;
             if(playerY < 120) { let diff = 120 - playerY; playerY = 120; cameraY += diff; maxHeight = Math.floor(cameraY / 10); document.getElementById("jump-score").innerText = maxHeight; platforms.forEach(p => { p.y += diff; if(p.y > 260) { p.y = 0; p.x = Math.random() * 190; } }); }
-            platforms.forEach(plat => { if(pVy > 0 && playerX + 15 >= plat.x && playerX <= plat.x + plat.w && playerY + 15 >= plat.y && playerY + 15 <= plat.y + 10) { pVy = -7.5; } });
-            if(playerY > 260) { document.getElementById("jump-score").innerText = maxHeight + " (Düştün!)"; return; }
+            platforms.forEach(plat => { if(pVy > 0 && playerX + 15 >= plat.x && playerX <= plat.x + plat.w && playerY + 15 >= plat.y && playerY + 15 <= plat.y + 10) { playSound('jump'); pVy = -7.5; } });
+            if(playerY > 260) { playSound('gameover'); document.getElementById("jump-score").innerText = maxHeight + " (Düştün!)"; return; }
             jCtx.fillStyle = "#0f172a"; jCtx.fillRect(0, 0, 260, 260); jCtx.fillStyle = "#38bdf8"; jCtx.fillRect(playerX, playerY, 15, 15); jCtx.fillStyle = "#22c55e"; platforms.forEach(plat => jCtx.fillRect(plat.x, plat.y, plat.w, 8));
             activeAnimFrame = requestAnimationFrame(loopJump);
         }
@@ -605,15 +653,15 @@
         function resetSimon() { stopAllGames(); simonSeq = []; simonUserStep = 0; simonLevel = 1; document.getElementById("simon-status").innerText = "Seviye: 1"; nextSimonRound(); }
         function nextSimonRound() { simonUserStep = 0; document.getElementById("simon-status").innerText = "Seviye: " + simonLevel; simonSeq.push(Math.floor(Math.random() * 6)); playSimonSeq(); }
         function playSimonSeq() { let i = 0; let speed = Math.max(250, 600 - (simonLevel * 30)); let timer = setInterval(() => { flashSimon(simonSeq[i]); i++; if(i >= simonSeq.length) clearInterval(timer); }, speed); activeIntervals.push(timer); }
-        function flashSimon(btnIdx) { let el = document.getElementById("simon-" + btnIdx); if(el) { el.classList.add("active"); setTimeout(() => el.classList.remove("active"), 200); } }
-        function pressSimon(btnIdx) { flashSimon(btnIdx); if(btnIdx === simonSeq[simonUserStep]) { simonUserStep++; if(simonUserStep >= simonSeq.length) { simonLevel++; setTimeout(nextSimonRound, 700); } } else { document.getElementById("simon-status").innerText = "Yanlış! Rekor Seviye: " + (simonLevel - 1); } }
+        function flashSimon(btnIdx) { playSound('hit'); let el = document.getElementById("simon-" + btnIdx); if(el) { el.classList.add("active"); setTimeout(() => el.classList.remove("active"), 200); } }
+        function pressSimon(btnIdx) { flashSimon(btnIdx); if(btnIdx === simonSeq[simonUserStep]) { simonUserStep++; if(simonUserStep >= simonSeq.length) { playSound('score'); simonLevel++; setTimeout(nextSimonRound, 700); } } else { playSound('gameover'); document.getElementById("simon-status").innerText = "Yanlış! Rekor Seviye: " + (simonLevel - 1); } }
 
         /* --- BOKS ARENASI --- */
         const bxCanvas = document.getElementById("boxCanvas"); const bxCtx = bxCanvas.getContext("2d");
         let punchSide = 'left', punchY = 0, bxScore = 0, playerAction = 'normal';
         function resetBox() { stopAllGames(); bxScore = 0; document.getElementById("box-score").innerText = bxScore; spawnPunch(); loopBox(); }
         function spawnPunch() { punchSide = Math.random() < 0.5 ? 'left' : 'right'; punchY = -20; }
-        function blockBox(side) { if(punchY > 120 && punchY < 220 && side === punchSide) { bxScore += 10; document.getElementById("box-score").innerText = bxScore; playerAction = side; setTimeout(() => playerAction = 'normal', 300); spawnPunch(); } }
+        function blockBox(side) { if(punchY > 120 && punchY < 220 && side === punchSide) { playSound('hit'); bxScore += 10; document.getElementById("box-score").innerText = bxScore; playerAction = side; setTimeout(() => playerAction = 'normal', 300); spawnPunch(); } }
         function loopBox() {
             if(currentGame2D !== 13 || currentMode !== '2d') return;
             punchY += 2.5 + (bxScore * 0.05);
@@ -621,7 +669,7 @@
             bxCtx.strokeStyle = "#ef4444"; bxCtx.lineWidth = 3; bxCtx.strokeRect(10, 10, 240, 240);
             bxCtx.font = "40px Serif"; bxCtx.fillText("🥊", punchSide === 'left' ? 60 : 160, Math.min(punchY, 180));
             bxCtx.font = "45px Serif"; bxCtx.fillText(playerAction === 'normal' ? "🛡️" : "💥", 110, 230);
-            if(punchY > 210) { document.getElementById("box-score").innerText = bxScore + " (Nakavt Oldun!)"; return; }
+            if(punchY > 210) { playSound('gameover'); document.getElementById("box-score").innerText = bxScore + " (Nakavt Oldun!)"; return; }
             activeAnimFrame = requestAnimationFrame(loopBox);
         }
 
@@ -630,7 +678,7 @@
         let carLane = 1, obstacles2D = [], rcScore = 0, rcTimer = 0;
         const lanes2D = [40, 115, 190];
         function resetRace() { stopAllGames(); carLane = 1; obstacles2D = []; rcScore = 0; rcTimer = 0; document.getElementById("race-score").innerText = rcScore; loopRace(); }
-        function moveRaceLane(dir) { carLane += dir; if(carLane < 0) carLane = 0; if(carLane > 2) carLane = 2; }
+        function moveRaceLane(dir) { playSound('hit'); carLane += dir; if(carLane < 0) carLane = 0; if(carLane > 2) carLane = 2; }
         function loopRace() {
             if(currentGame2D !== 14 || currentMode !== '2d') return;
             rcTimer++; if(rcTimer > 35) { rcTimer = 0; obstacles2D.push({lane: Math.floor(Math.random() * 3), y: -40}); }
@@ -640,8 +688,8 @@
             rcCtx.fillStyle = "#38bdf8"; rcCtx.fillRect(lanes2D[carLane], 200, 30, 50);
             for(let i = obstacles2D.length - 1; i >= 0; i--) {
                 obstacles2D[i].y += 4 + (rcScore * 0.1); rcCtx.fillStyle = "#ef4444"; rcCtx.fillRect(lanes2D[obstacles2D[i].lane], obstacles2D[i].y, 30, 40);
-                if(obstacles2D[i].lane === carLane && obstacles2D[i].y + 40 >= 200 && obstacles2D[i].y <= 250) { document.getElementById("race-score").innerText = rcScore + " (Kaza Yaptın!)"; return; }
-                if(obstacles2D[i].y > 260) { obstacles2D.splice(i, 1); rcScore += 5; document.getElementById("race-score").innerText = rcScore; }
+                if(obstacles2D[i].lane === carLane && obstacles2D[i].y + 40 >= 200 && obstacles2D[i].y <= 250) { playSound('gameover'); document.getElementById("race-score").innerText = rcScore + " (Kaza Yaptın!)"; return; }
+                if(obstacles2D[i].y > 260) { playSound('score'); obstacles2D.splice(i, 1); rcScore += 5; document.getElementById("race-score").innerText = rcScore; }
             }
             activeAnimFrame = requestAnimationFrame(loopRace);
         }
@@ -649,7 +697,7 @@
         /* ================= 3D MOTOR VE OYUNLAR (SABİT & AKICI) ================= */
         let scene3D, camera3D, renderer3D;
         let p3D, obs3D = [], score3D = 0, is3DActive = false;
-        let keys3D = { left: false, right: false };
+        let keys3D = { left: false, right: false, up: false, down: false };
 
         function switchGame3D(num) {
             stopAllGames();
@@ -673,8 +721,12 @@
             } else if(num === 2) { // 3D Yılan
                 document.getElementById("title-3d").innerText = "3D Yılan Oyunu";
                 ctrlBox.innerHTML = `
-                    <button class="ctrl-btn" onclick="s3DDir='LEFT'">⬅️</button>
-                    <button class="ctrl-btn" onclick="s3DDir='RIGHT'">➡️</button>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; width: 180px;">
+                        <div></div><button class="ctrl-btn" onclick="s3DDir='UP'">⬆️</button><div></div>
+                        <button class="ctrl-btn" onclick="s3DDir='LEFT'">⬅️</button>
+                        <button class="ctrl-btn" onclick="s3DDir='DOWN'">⬇️</button>
+                        <button class="ctrl-btn" onclick="s3DDir='RIGHT'">➡️</button>
+                    </div>
                 `;
             } else if(num === 3) { // 3D Uzay
                 document.getElementById("title-3d").innerText = "3D Uzay Savaşı";
@@ -737,17 +789,18 @@
             stopAllGames();
             init3D();
             score3D = 0; document.getElementById("score-3d").innerText = score3D;
-            is3DActive = true; obs3D = []; keys3D = { left: false, right: false };
+            is3DActive = true; obs3D = []; keys3D = { left: false, right: false, up: false, down: false };
 
             if(currentGame3D === 1) { // 3D ARABA
                 const roadMat = new THREE.MeshLambertMaterial({ color: 0x1e293b });
                 const road = new THREE.Mesh(new THREE.PlaneGeometry(8, 100), roadMat);
                 road.rotation.x = -Math.PI / 2; road.position.z = -40; scene3D.add(road);
 
-                p3D = create3DBox(1, 0.5, 1.8, 0x38bdf8);
+                p3D = create3DBox(1.2, 0.5, 1.8, 0x38bdf8);
                 scene3D.add(p3D);
                 loop3DRace();
             } else if(currentGame3D === 2) { // 3D YILAN
+                s3DDir = 'RIGHT';
                 p3D = create3DBox(0.8, 0.8, 0.8, 0x22c55e);
                 scene3D.add(p3D);
                 spawn3DFood();
@@ -770,7 +823,6 @@
                 ball.position.set(0, 0, 1); ball.userData = { dx: 0.05, dz: -0.06 };
                 scene3D.add(ball);
                 
-                // Tuğlalar
                 for(let r=0; r<3; r++) {
                     for(let c=0; c<5; c++) {
                         let b = create3DBox(0.8, 0.3, 0.4, 0xef4444);
@@ -789,23 +841,29 @@
             return new THREE.Mesh(new THREE.SphereGeometry(r, 16, 16), new THREE.MeshLambertMaterial({ color: col }));
         }
 
-        // 3D Araba Döngüsü
+        // 3D Araba Döngüsü (DARALTILMIŞ ŞERİT - ARALARA SIĞAMAZ)
+        const lanes3D = [-1.8, 0, 1.8];
         function loop3DRace() {
             if(!is3DActive || currentGame3D !== 1 || currentMode !== '3d') return;
-            if(keys3D.left) { p3D.position.x -= 0.1; if(p3D.position.x < -2.8) p3D.position.x = -2.8; }
-            if(keys3D.right) { p3D.position.x += 0.1; if(p3D.position.x > 2.8) p3D.position.x = 2.8; }
+            if(keys3D.left) { p3D.position.x -= 0.12; if(p3D.position.x < -2.4) p3D.position.x = -2.4; }
+            if(keys3D.right) { p3D.position.x += 0.12; if(p3D.position.x > 2.4) p3D.position.x = 2.4; }
 
-            if(Math.random() < 0.04) {
-                let obs = create3DBox(1, 0.5, 1.8, 0xef4444);
-                obs.position.set((Math.floor(Math.random()*3)-1)*2.5, 0, -35);
+            if(Math.random() < 0.045) {
+                let obs = create3DBox(1.3, 0.5, 1.8, 0xef4444);
+                let randLane = lanes3D[Math.floor(Math.random()*3)];
+                obs.position.set(randLane, 0, -35);
                 scene3D.add(obs); obs3D.push(obs);
             }
             for(let i=obs3D.length-1; i>=0; i--) {
-                obs3D[i].position.z += 0.35;
-                if(Math.abs(p3D.position.x - obs3D[i].position.x) < 0.9 && Math.abs(p3D.position.z - obs3D[i].position.z) < 1.4) {
+                obs3D[i].position.z += 0.38;
+                
+                // Hassas Çarpışma Testi (Aralara Sığamaz)
+                if(Math.abs(p3D.position.x - obs3D[i].position.x) < 1.25 && Math.abs(p3D.position.z - obs3D[i].position.z) < 1.5) {
+                    playSound('gameover');
                     document.getElementById("score-3d").innerText = score3D + " (Kaza!)"; return;
                 }
                 if(obs3D[i].position.z > 5) {
+                    playSound('score');
                     scene3D.remove(obs3D[i]); obs3D.splice(i, 1); score3D += 10;
                     document.getElementById("score-3d").innerText = score3D;
                 }
@@ -814,7 +872,7 @@
             activeAnimFrame = requestAnimationFrame(loop3DRace);
         }
 
-        // 3D Yılan Döngüsü
+        // 3D Yılan
         let s3DDir = 'RIGHT';
         function spawn3DFood() {
             let f = create3DSphere(0.35, 0xef4444);
@@ -823,16 +881,27 @@
         }
         function loop3DSnake() {
             if(!is3DActive || currentGame3D !== 2 || currentMode !== '3d') return;
-            if(s3DDir==='RIGHT') p3D.position.x += 0.04; if(s3DDir==='LEFT') p3D.position.x -= 0.04;
+            if(s3DDir==='RIGHT') p3D.position.x += 0.04; 
+            if(s3DDir==='LEFT') p3D.position.x -= 0.04;
+            if(s3DDir==='UP') p3D.position.z -= 0.04;
+            if(s3DDir==='DOWN') p3D.position.z += 0.04;
+
+            if(Math.abs(p3D.position.x) > 3.2 || Math.abs(p3D.position.z) > 3.2) {
+                playSound('gameover');
+                document.getElementById("score-3d").innerText = score3D + " (Duvara Çarptın!)"; return;
+            }
+
             if(obs3D[0] && p3D.position.distanceTo(obs3D[0].position) < 0.7) {
+                playSound('score');
                 scene3D.remove(obs3D[0]); score3D += 10; document.getElementById("score-3d").innerText = score3D; spawn3DFood();
             }
             renderer3D.render(scene3D, camera3D);
             activeAnimFrame = requestAnimationFrame(loop3DSnake);
         }
 
-        // 3D Uzay Döngüsü
+        // 3D Uzay
         function shoot3D() {
+            playSound('shoot');
             let b = create3DSphere(0.15, 0xef4444);
             b.position.copy(p3D.position); scene3D.add(b); obs3D.push(b);
         }
@@ -843,13 +912,13 @@
 
             for(let i=obs3D.length-1; i>=0; i--) {
                 obs3D[i].position.z -= 0.3;
-                if(obs3D[i].position.z < -20) { scene3D.remove(obs3D[i]); obs3D.splice(i, 1); score3D += 5; document.getElementById("score-3d").innerText = score3D; }
+                if(obs3D[i].position.z < -20) { playSound('score'); scene3D.remove(obs3D[i]); obs3D.splice(i, 1); score3D += 5; document.getElementById("score-3d").innerText = score3D; }
             }
             renderer3D.render(scene3D, camera3D);
             activeAnimFrame = requestAnimationFrame(loop3DSpace);
         }
 
-        // 3D Pong Döngüsü
+        // 3D Pong
         function loop3DPong() {
             if(!is3DActive || currentGame3D !== 4 || currentMode !== '3d') return;
             if(keys3D.left) { p3D.position.x -= 0.1; if(p3D.position.x < -2.5) p3D.position.x = -2.5; }
@@ -862,8 +931,10 @@
                 if(ball.position.z < -3) ball.userData.dz = -ball.userData.dz;
 
                 if(ball.position.z >= 2.2 && Math.abs(ball.position.x - p3D.position.x) < 1.2) {
+                    playSound('score');
                     ball.userData.dz = -ball.userData.dz; score3D += 10; document.getElementById("score-3d").innerText = score3D;
                 } else if(ball.position.z > 3.5) {
+                    playSound('gameover');
                     document.getElementById("score-3d").innerText = score3D + " (Kaçırdın!)"; return;
                 }
             }
@@ -871,7 +942,7 @@
             activeAnimFrame = requestAnimationFrame(loop3DPong);
         }
 
-        // 3D Tuğla Kırma Döngüsü
+        // 3D Tuğla Kırma
         function loop3DBrick() {
             if(!is3DActive || currentGame3D !== 5 || currentMode !== '3d') return;
             if(keys3D.left) { p3D.position.x -= 0.1; if(p3D.position.x < -2.5) p3D.position.x = -2.5; }
@@ -889,12 +960,19 @@
 
                 for(let i=obs3D.length-1; i>=0; i--) {
                     if(ball.position.distanceTo(obs3D[i].position) < 0.6) {
+                        playSound('hit');
                         scene3D.remove(obs3D[i]); obs3D.splice(i, 1); ball.userData.dz = -ball.userData.dz;
                         score3D += 10; document.getElementById("score-3d").innerText = score3D;
                     }
                 }
 
+                if(obs3D.length === 0) {
+                    playSound('score');
+                    document.getElementById("score-3d").innerText = score3D + " 🎉 Tebrikler! Tüm Tuğlaları Kırdın!"; return;
+                }
+
                 if(ball.position.z > 3.5) {
+                    playSound('gameover');
                     document.getElementById("score-3d").innerText = score3D + " (Oyun Bitti!)"; return;
                 }
             }
