@@ -2,19 +2,15 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Efsane Web Oyun Portalı</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; touch-action: manipulation; }
         body {
-            background-color: #0f172a;
-            color: #f8fafc;
+            background-color: #0f172a; color: #f8fafc;
             font-family: "Segoe UI", Roboto, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            padding: 15px;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh; padding: 15px; user-select: none; -webkit-user-select: none;
         }
         h1 { color: #38bdf8; text-align: center; margin-bottom: 12px; font-size: 1.8rem; }
         .nav-btns { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; margin-bottom: 15px; max-width: 440px; }
@@ -34,25 +30,21 @@
             color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;
         }
         
-        /* XOX */
         .xox-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 15px 0; }
         .xox-cell { width: 85px; height: 85px; background: #0f172a; border: 2px solid #334155; font-size: 2.2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 8px; font-weight: bold; }
 
-        /* CANVAS OYUNLARI */
-        canvas { background: #0f172a; border: 2px solid #334155; border-radius: 8px; margin-top: 10px; touch-action: none; }
+        canvas { background: #0f172a; border: 2px solid #334155; border-radius: 8px; margin-top: 10px; }
         .controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; width: 180px; margin: 10px auto 0; }
-        .ctrl-btn { background: #334155; color: white; border: none; padding: 10px; border-radius: 6px; font-size: 1.1rem; user-select: none; -webkit-user-select: none; }
+        .ctrl-btn { background: #334155; color: white; border: none; padding: 10px; border-radius: 6px; font-size: 1.1rem; }
 
-        /* HAFIZA & SIMON */
-        .memory-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 15px; }
-        .mem-card { height: 65px; background: #0f172a; border: 2px solid #334155; border-radius: 8px; font-size: 2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .memory-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 15px; }
+        .mem-card { height: 60px; background: #0f172a; border: 2px solid #334155; border-radius: 8px; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
-        .simon-board { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
-        .simon-btn { height: 100px; border-radius: 12px; cursor: pointer; opacity: 0.6; }
+        .simon-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 15px; }
+        .simon-btn { height: 75px; border-radius: 10px; cursor: pointer; opacity: 0.5; }
         .simon-btn.active { opacity: 1; transform: scale(1.05); }
 
-        /* REFLEKS */
-        .click-target { width: 110px; height: 110px; background: #ef4444; border-radius: 50%; margin: 15px auto; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: bold; cursor: pointer; user-select: none; }
+        .click-target { width: 110px; height: 110px; background: #ef4444; border-radius: 50%; margin: 15px auto; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -71,6 +63,8 @@
         <button class="nav-btn" onclick="switchGame(10)">🎯 Hedef</button>
         <button class="nav-btn" onclick="switchGame(11)">🏃 Zıpla</button>
         <button class="nav-btn" onclick="switchGame(12)">🎨 Simon</button>
+        <button class="nav-btn" onclick="switchGame(13)">🥊 Boks</button>
+        <button class="nav-btn" onclick="switchGame(14)">🏎️ Araba</button>
     </div>
 
     <!-- OYUN 1: YILAN -->
@@ -105,10 +99,10 @@
         <button class="action-btn" onclick="resetXOX()">Yeniden Başlat</button>
     </div>
 
-    <!-- OYUN 3: HAFIZA -->
+    <!-- OYUN 3: DEVAŞA HAFIZA -->
     <div id="game3" class="card">
-        <h2>Hafıza Oyunu</h2>
-        <div id="mem-status">Eşleşme: 0 / 6</div>
+        <h2>Devasa Hafıza (16 Kart)</h2>
+        <div id="mem-status">Eşleşme: 0 / 8</div>
         <div class="memory-board" id="mem-board"></div>
         <button class="action-btn" onclick="resetMemory()">Yeniden Başlat</button>
     </div>
@@ -122,7 +116,7 @@
         <button class="action-btn" onclick="resetClicker()">Sıfırla</button>
     </div>
 
-    <!-- OYUN 5: PING PONG (YAĞ GİBİ KAYAN) -->
+    <!-- OYUN 5: PING PONG -->
     <div id="game5" class="card">
         <h2>Ping Pong</h2>
         <div>Skor: <span id="pong-score">0</span></div>
@@ -138,9 +132,9 @@
         <button class="action-btn" onclick="resetPong()">Yeniden Başlat</button>
     </div>
 
-    <!-- OYUN 6: FLAPPY BIRD -->
+    <!-- OYUN 6: ZORLAŞAN FLAPPY BIRD -->
     <div id="game6" class="card">
-        <h2>Kuş Oyunu</h2>
+        <h2>Kuş Oyunu (Gitgide Zorlaşır)</h2>
         <div>Skor: <span id="bird-score">0</span></div>
         <canvas id="birdCanvas" width="260" height="260" onclick="jumpBird()"></canvas>
         <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 5px;">Zıplamak için kutunun içine tıkla!</p>
@@ -219,30 +213,58 @@
         <button class="action-btn" onclick="resetJump()">Yeniden Başlat</button>
     </div>
 
-    <!-- OYUN 12: SIMON SAYS -->
+    <!-- OYUN 12: 6 RENKLİ ZORLAŞAN SIMON -->
     <div id="game12" class="card">
-        <h2>Simon Says (Renk)</h2>
+        <h2>Efsane Simon (6 Renk)</h2>
         <div id="simon-status">Seviye: 1</div>
         <div class="simon-board">
             <div class="simon-btn" id="simon-0" style="background:#ef4444;" onclick="pressSimon(0)"></div>
             <div class="simon-btn" id="simon-1" style="background:#3b82f6;" onclick="pressSimon(1)"></div>
             <div class="simon-btn" id="simon-2" style="background:#22c55e;" onclick="pressSimon(2)"></div>
             <div class="simon-btn" id="simon-3" style="background:#eab308;" onclick="pressSimon(3)"></div>
+            <div class="simon-btn" id="simon-4" style="background:#a855f7;" onclick="pressSimon(4)"></div>
+            <div class="simon-btn" id="simon-5" style="background:#f97316;" onclick="pressSimon(5)"></div>
         </div>
         <button class="action-btn" onclick="resetSimon()">Yeniden Başlat</button>
     </div>
 
+    <!-- OYUN 13: BOKS / BLOK -->
+    <div id="game13" class="card">
+        <h2>Refleks Boks</h2>
+        <div>Skor: <span id="box-score">0</span></div>
+        <canvas id="boxCanvas" width="260" height="260"></canvas>
+        <div style="margin-top: 10px; display: flex; gap: 10px; justify-content: center;">
+            <button class="ctrl-btn" style="width: 100px; background: #ef4444;" onclick="blockBox('left')">🥊 Sol</button>
+            <button class="ctrl-btn" style="width: 100px; background: #3b82f6;" onclick="blockBox('right')">Sağ 🥊</button>
+        </div>
+        <button class="action-btn" onclick="resetBox()">Yeniden Başlat</button>
+    </div>
+
+    <!-- OYUN 14: ARABA YARIŞI -->
+    <div id="game14" class="card">
+        <h2>Nitro Araba</h2>
+        <div>Skor: <span id="race-score">0</span></div>
+        <canvas id="raceCanvas" width="260" height="260"></canvas>
+        <div style="margin-top: 10px; display: flex; gap: 10px; justify-content: center;">
+            <button class="ctrl-btn" style="width: 100px;" onclick="moveRaceLane(-1)">⬅️ Şerit</button>
+            <button class="ctrl-btn" style="width: 100px;" onclick="moveRaceLane(1)">Şerit ➡️</button>
+        </div>
+        <button class="action-btn" onclick="resetRace()">Yeniden Başlat</button>
+    </div>
+
     <script>
         let currentGame = 1;
+        let activeAnimFrame = null;
         let activeIntervals = [];
 
-        function clearAllTimers() {
+        function stopAllGames() {
+            if(activeAnimFrame) cancelAnimationFrame(activeAnimFrame);
             activeIntervals.forEach(clearInterval);
             activeIntervals = [];
         }
 
         function switchGame(num) {
-            clearAllTimers();
+            stopAllGames();
             currentGame = num;
             document.querySelectorAll(".card").forEach(c => c.classList.remove("active"));
             document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
@@ -259,6 +281,8 @@
             if(num === 10) resetTarget();
             if(num === 11) resetJump();
             if(num === 12) resetSimon();
+            if(num === 13) resetBox();
+            if(num === 14) resetRace();
         }
 
         /* --- XOX --- */
@@ -286,10 +310,10 @@
         const sCtx = sCanvas.getContext("2d");
         let snake, food, dir, sScore;
         function resetSnake() {
-            clearAllTimers();
+            stopAllGames();
             snake = [{x: 5, y: 5}]; food = {x: 2, y: 2}; dir = "RIGHT"; sScore = 0;
             document.getElementById("snake-score").innerText = sScore;
-            let loop = setInterval(drawSnake, 150);
+            let loop = setInterval(drawSnake, 140);
             activeIntervals.push(loop);
         }
         function setDir(d) {
@@ -303,7 +327,7 @@
             if(dir==="UP") head.y--; if(dir==="DOWN") head.y++;
             if(dir==="LEFT") head.x--; if(dir==="RIGHT") head.x++;
             if(head.x<0 || head.x>=13 || head.y<0 || head.y>=13 || snake.some(s=>s.x===head.x && s.y===head.y)) {
-                clearAllTimers();
+                stopAllGames();
                 document.getElementById("snake-score").innerText = sScore + " (Oyun Bitti!)";
                 return;
             }
@@ -317,12 +341,12 @@
             sCtx.fillStyle = "#22c55e"; snake.forEach(s => sCtx.fillRect(s.x*20, s.y*20, 18, 18));
         }
 
-        /* --- HAFIZA --- */
-        const emojis = ["🚀","🚀","👾","👾","🔥","🔥","⚡","⚡","👑","👑","🎮","🎮"];
+        /* --- DEVAŞA HAFIZA (16 KART) --- */
+        const emojis = ["🚀","🚀","👾","👾","🔥","🔥","⚡","⚡","👑","👑","🎮","🎮","🎯","🎯","💎","💎"];
         let flipped = [], matchedCount = 0;
         function resetMemory() {
             matchedCount = 0; flipped = [];
-            document.getElementById("mem-status").innerText = "Eşleşme: 0 / 6";
+            document.getElementById("mem-status").innerText = "Eşleşme: 0 / 8";
             const boardEl = document.getElementById("mem-board");
             boardEl.innerHTML = "";
             let shuffled = [...emojis].sort(() => Math.random() - 0.5);
@@ -341,9 +365,9 @@
                 if(flipped.length === 2) {
                     if(flipped[0].dataset.val === flipped[1].dataset.val) {
                         matchedCount++;
-                        document.getElementById("mem-status").innerText = `Eşleşme: ${matchedCount} / 6`;
+                        document.getElementById("mem-status").innerText = `Eşleşme: ${matchedCount} / 8`;
                         flipped = [];
-                        if(matchedCount === 6) document.getElementById("mem-status").innerText = "Tebrikler! Kazandın 🎉";
+                        if(matchedCount === 8) document.getElementById("mem-status").innerText = "Tebrikler! Kazandın 🎉";
                     } else {
                         setTimeout(() => {
                             if(flipped[0]) flipped[0].innerText = "";
@@ -355,10 +379,10 @@
             }
         }
 
-        /* --- REFLEKS --- */
+        /* --- REFLEKS TESTİ --- */
         let clicks = 0, timeLeft = 5, clickActive = false;
         function resetClicker() {
-            clearAllTimers();
+            stopAllGames();
             clicks = 0; timeLeft = 5; clickActive = false;
             document.getElementById("click-count").innerText = "0";
             document.getElementById("click-status").innerText = "5 Saniyede Kaç Tık?";
@@ -372,7 +396,7 @@
                     timeLeft--;
                     document.getElementById("click-status").innerText = `Kalan Süre: ${timeLeft}s`;
                     if(timeLeft <= 0) {
-                        clearAllTimers(); clickActive = false;
+                        stopAllGames(); clickActive = false;
                         document.getElementById("click-status").innerText = "Süre Bitti!";
                         document.getElementById("clicker").innerText = "BİTTİ";
                     }
@@ -382,20 +406,20 @@
             if(clickActive) { clicks++; document.getElementById("click-count").innerText = clicks; }
         }
 
-        /* --- PING PONG (KAYAN AKICI KONTROL) --- */
+        /* --- PING PONG (RAF ENGINE) --- */
         const pCanvas = document.getElementById("pongCanvas");
         const pCtx = pCanvas.getContext("2d");
         let paddleX = 100, ballX = 130, ballY = 100, ballDX = 3.5, ballDY = -3.5, pScore = 0;
         let pongKeys = { left: false, right: false };
         function resetPong() {
-            clearAllTimers();
+            stopAllGames();
             paddleX = 100; ballX = 130; ballY = 100; ballDX = 3.5; ballDY = -3.5; pScore = 0;
             pongKeys = { left: false, right: false };
             document.getElementById("pong-score").innerText = pScore;
-            let loop = setInterval(drawPong, 18);
-            activeIntervals.push(loop);
+            loopPong();
         }
-        function drawPong() {
+        function loopPong() {
+            if(currentGame !== 5) return;
             if(pongKeys.left) { paddleX -= 5; if(paddleX < 0) paddleX = 0; }
             if(pongKeys.right) { paddleX += 5; if(paddleX > 200) paddleX = 200; }
 
@@ -410,37 +434,39 @@
                 ballDY = -ballDY; pScore += 10;
                 document.getElementById("pong-score").innerText = pScore;
             } else if(ballY >= 254) {
-                clearAllTimers();
                 document.getElementById("pong-score").innerText = pScore + " (Oyun Bitti!)";
+                return;
             }
+            activeAnimFrame = requestAnimationFrame(loopPong);
         }
 
-        /* --- FLAPPY BIRD --- */
+        /* --- GİTGİDE ZORLAŞAN FLAPPY BIRD --- */
         const bCanvas = document.getElementById("birdCanvas");
         const bCtx = bCanvas.getContext("2d");
         let birdY = 130, velocity = 0, pipes = [], bScore = 0, pipeTimer = 0;
         function resetBird() {
-            clearAllTimers();
+            stopAllGames();
             birdY = 130; velocity = 0; pipes = []; bScore = 0; pipeTimer = 0;
             document.getElementById("bird-score").innerText = bScore;
-            let loop = setInterval(drawBird, 22);
-            activeIntervals.push(loop);
+            loopBird();
         }
-        function jumpBird() { velocity = -6; }
-        function drawBird() {
-            velocity += 0.45; birdY += velocity;
+        function jumpBird() { velocity = -5.5; }
+        function loopBird() {
+            if(currentGame !== 6) return;
+            velocity += 0.4; birdY += velocity;
             pipeTimer++;
-            if(pipeTimer > 65) {
+            if(pipeTimer > 70) {
                 pipeTimer = 0;
-                let gap = 80;
-                let topH = Math.floor(Math.random() * 110) + 30;
+                let gap = Math.max(60, 85 - Math.floor(bScore / 3)); // Skor arttıkça daralır
+                let topH = Math.floor(Math.random() * 100) + 30;
                 pipes.push({x: 260, top: topH, bottom: topH + gap, passed: false});
             }
             bCtx.fillStyle = "#0f172a"; bCtx.fillRect(0, 0, 260, 260);
             bCtx.fillStyle = "#facc15"; bCtx.beginPath(); bCtx.arc(50, birdY, 8, 0, Math.PI*2); bCtx.fill();
 
+            let speed = 2.2 + (bScore * 0.1); // Gitgide hızlanır
             for(let i = pipes.length - 1; i >= 0; i--) {
-                pipes[i].x -= 2.5;
+                pipes[i].x -= speed;
                 bCtx.fillStyle = "#22c55e";
                 bCtx.fillRect(pipes[i].x, 0, 32, pipes[i].top);
                 bCtx.fillRect(pipes[i].x, pipes[i].bottom, 32, 260 - pipes[i].bottom);
@@ -450,13 +476,14 @@
                     document.getElementById("bird-score").innerText = bScore;
                 }
                 if(50 >= pipes[i].x && 50 <= pipes[i].x+32 && (birdY <= pipes[i].top || birdY >= pipes[i].bottom)) {
-                    clearAllTimers(); document.getElementById("bird-score").innerText = bScore + " (Oyun Bitti!)"; return;
+                    document.getElementById("bird-score").innerText = bScore + " (Oyun Bitti!)"; return;
                 }
                 if(pipes[i].x < -32) pipes.splice(i, 1);
             }
             if(birdY <= 0 || birdY >= 260) {
-                clearAllTimers(); document.getElementById("bird-score").innerText = bScore + " (Oyun Bitti!)";
+                document.getElementById("bird-score").innerText = bScore + " (Oyun Bitti!)"; return;
             }
+            activeAnimFrame = requestAnimationFrame(loopBird);
         }
 
         /* --- UZAY SAVAŞI --- */
@@ -464,19 +491,18 @@
         const spCtx = spCanvas.getContext("2d");
         let shipX = 115, bullets = [], aliens = [], spScore = 0, alienTimer = 0;
         let spaceKeys = { left: false, right: false };
-
         function resetSpace() {
-            clearAllTimers();
+            stopAllGames();
             shipX = 115; bullets = []; aliens = []; spScore = 0; alienTimer = 0;
             spaceKeys = { left: false, right: false };
             document.getElementById("space-score").innerText = spScore;
-            let loop = setInterval(drawSpace, 25);
-            activeIntervals.push(loop);
+            loopSpace();
         }
         function shootBullet() {
             if(currentGame === 7) bullets.push({x: shipX + 13, y: 230});
         }
-        function drawSpace() {
+        function loopSpace() {
+            if(currentGame !== 7) return;
             if(spaceKeys.left) { shipX -= 4; if(shipX < 0) shipX = 0; }
             if(spaceKeys.right) { shipX += 4; if(shipX > 230) shipX = 230; }
 
@@ -511,31 +537,29 @@
                 }
 
                 if(aliens[a] && aliens[a].y > 230) {
-                    clearAllTimers(); document.getElementById("space-score").innerText = spScore + " (Dünya İstila Edildi!)"; return;
+                    document.getElementById("space-score").innerText = spScore + " (Dünya İstila Edildi!)"; return;
                 }
             }
+            activeAnimFrame = requestAnimationFrame(loopSpace);
         }
 
-        /* --- TUĞLA KIRMA (KAYAN KONTROL) --- */
+        /* --- TUĞLA KIRMA --- */
         const brCanvas = document.getElementById("brickCanvas");
         const brCtx = brCanvas.getContext("2d");
         let brPaddleX = 100, brBallX = 130, brBallY = 180, brBallDX = 3, brBallDY = -3, brScore = 0, bricks = [];
         let brickKeys = { left: false, right: false };
         function resetBrick() {
-            clearAllTimers();
+            stopAllGames();
             brPaddleX = 100; brBallX = 130; brBallY = 180; brBallDX = 3; brBallDY = -3; brScore = 0;
-            brickKeys = { left: false, right: false };
-            bricks = [];
+            brickKeys = { left: false, right: false }; bricks = [];
             for(let r=0; r<4; r++) {
-                for(let c=0; c<5; c++) {
-                    bricks.push({x: c*48 + 12, y: r*20 + 30, status: 1});
-                }
+                for(let c=0; c<5; c++) bricks.push({x: c*48 + 12, y: r*20 + 30, status: 1});
             }
             document.getElementById("brick-score").innerText = brScore;
-            let loop = setInterval(drawBrick, 20);
-            activeIntervals.push(loop);
+            loopBrick();
         }
-        function drawBrick() {
+        function loopBrick() {
+            if(currentGame !== 8) return;
             if(brickKeys.left) { brPaddleX -= 5; if(brPaddleX < 0) brPaddleX = 0; }
             if(brickKeys.right) { brPaddleX += 5; if(brPaddleX > 200) brPaddleX = 200; }
 
@@ -560,8 +584,9 @@
             if(brBallY <= 6) brBallDY = -brBallDY;
             if(brBallY >= 239 && brBallX >= brPaddleX && brBallX <= brPaddleX + 60) brBallDY = -brBallDY;
             else if(brBallY >= 254) {
-                clearAllTimers(); document.getElementById("brick-score").innerText = brScore + " (Oyun Bitti!)";
+                document.getElementById("brick-score").innerText = brScore + " (Oyun Bitti!)"; return;
             }
+            activeAnimFrame = requestAnimationFrame(loopBrick);
         }
 
         /* --- TETRİS --- */
@@ -569,15 +594,9 @@
         const tCtx = tCanvas.getContext("2d");
         const ROWS = 13, COLS = 10, SQ = 20;
         let tGrid = [], currentPiece, tScore = 0;
-        const PIECES = [
-            [[1,1,1,1]],
-            [[1,1],[1,1]],
-            [[0,1,0],[1,1,1]],
-            [[1,0,0],[1,1,1]],
-            [[0,0,1],[1,1,1]]
-        ];
+        const PIECES = [[[1,1,1,1]], [[1,1],[1,1]], [[0,1,0],[1,1,1]], [[1,0,0],[1,1,1]], [[0,0,1],[1,1,1]]];
         function resetTetris() {
-            clearAllTimers();
+            stopAllGames();
             tGrid = Array.from({length: ROWS}, () => Array(COLS).fill(0));
             tScore = 0; document.getElementById("tetris-score").innerText = tScore;
             spawnPiece();
@@ -588,11 +607,7 @@
             let shape = PIECES[Math.floor(Math.random() * PIECES.length)];
             currentPiece = {shape, x: 3, y: 0};
         }
-        function moveTetris(dir) {
-            currentPiece.x += dir;
-            if(collision()) currentPiece.x -= dir;
-            drawTetrisBoard();
-        }
+        function moveTetris(dir) { currentPiece.x += dir; if(collision()) currentPiece.x -= dir; drawTetrisBoard(); }
         function rotateTetris() {
             let rotated = currentPiece.shape[0].map((_, i) => currentPiece.shape.map(row => row[i]).reverse());
             let old = currentPiece.shape; currentPiece.shape = rotated;
@@ -602,10 +617,8 @@
         function dropTetris() {
             currentPiece.y++;
             if(collision()) {
-                currentPiece.y--;
-                mergePiece();
-                spawnPiece();
-                if(collision()) { clearAllTimers(); document.getElementById("tetris-score").innerText = tScore + " (Bitti!)"; }
+                currentPiece.y--; mergePiece(); spawnPiece();
+                if(collision()) { stopAllGames(); document.getElementById("tetris-score").innerText = tScore + " (Bitti!)"; }
             }
             drawTetrisBoard();
         }
@@ -651,118 +664,165 @@
             }
         }
 
-        /* --- OYUN 10: HEDEF VURMA --- */
+        /* --- HEDEF VURMA --- */
         const tgCanvas = document.getElementById("targetCanvas");
         const tgCtx = tgCanvas.getContext("2d");
         let targetX = 130, targetY = 130, tgScore = 0;
-        function resetTarget() {
-            clearAllTimers();
-            tgScore = 0; document.getElementById("target-score").innerText = tgScore;
-            spawnTarget();
-        }
-        function spawnTarget() {
-            targetX = Math.floor(Math.random() * 200) + 30;
-            targetY = Math.floor(Math.random() * 200) + 30;
-            drawTargetBoard();
-        }
+        function resetTarget() { stopAllGames(); tgScore = 0; document.getElementById("target-score").innerText = tgScore; spawnTarget(); }
+        function spawnTarget() { targetX = Math.floor(Math.random() * 200) + 30; targetY = Math.floor(Math.random() * 200) + 30; drawTargetBoard(); }
         function drawTargetBoard() {
             tgCtx.fillStyle = "#0f172a"; tgCtx.fillRect(0, 0, 260, 260);
             tgCtx.fillStyle = "#ef4444"; tgCtx.beginPath(); tgCtx.arc(targetX, targetY, 18, 0, Math.PI*2); tgCtx.fill();
             tgCtx.fillStyle = "#ffffff"; tgCtx.beginPath(); tgCtx.arc(targetX, targetY, 10, 0, Math.PI*2); tgCtx.fill();
-            tgCtx.fillStyle = "#ef4444"; tgCtx.beginPath(); tgCtx.arc(targetX, targetY, 4, 0, Math.PI*2); tgCtx.fill();
         }
         function hitTarget(e) {
             let rect = tgCanvas.getBoundingClientRect();
-            let clickX = e.clientX - rect.left;
-            let clickY = e.clientY - rect.top;
-            let dist = Math.hypot(clickX - targetX, clickY - targetY);
-            if(dist <= 20) {
-                tgScore += 10; document.getElementById("target-score").innerText = tgScore;
-                spawnTarget();
-            }
+            let dist = Math.hypot((e.clientX - rect.left) - targetX, (e.clientY - rect.top) - targetY);
+            if(dist <= 20) { tgScore += 10; document.getElementById("target-score").innerText = tgScore; spawnTarget(); }
         }
 
-        /* --- OYUN 11: ZIPI ZIPI (JUMP) --- */
+        /* --- ZIPI ZIPI --- */
         const jCanvas = document.getElementById("jumpCanvas");
         const jCtx = jCanvas.getContext("2d");
         let playerX = 120, playerY = 200, pVy = 0, platforms = [], jScore = 0;
         let jumpKeys = { left: false, right: false };
         function resetJump() {
-            clearAllTimers();
-            playerX = 120; playerY = 200; pVy = -6; jScore = 0;
-            jumpKeys = { left: false, right: false };
-            platforms = [
-                {x: 100, y: 240, w: 60},
-                {x: 40, y: 180, w: 60},
-                {x: 160, y: 120, w: 60},
-                {x: 80, y: 60, w: 60}
-            ];
+            stopAllGames();
+            playerX = 120; playerY = 200; pVy = -6; jScore = 0; jumpKeys = { left: false, right: false };
+            platforms = [{x: 100, y: 240, w: 60}, {x: 40, y: 180, w: 60}, {x: 160, y: 120, w: 60}, {x: 80, y: 60, w: 60}];
             document.getElementById("jump-score").innerText = jScore;
-            let loop = setInterval(drawJump, 20);
-            activeIntervals.push(loop);
+            loopJump();
         }
-        function drawJump() {
+        function loopJump() {
+            if(currentGame !== 11) return;
             if(jumpKeys.left) { playerX -= 4; if(playerX < 0) playerX = 0; }
             if(jumpKeys.right) { playerX += 4; if(playerX > 245) playerX = 245; }
 
             pVy += 0.3; playerY += pVy;
-
-            // Platform çarpışma
             platforms.forEach(plat => {
                 if(pVy > 0 && playerX + 15 >= plat.x && playerX <= plat.x + plat.w && playerY + 15 >= plat.y && playerY + 15 <= plat.y + 10) {
                     pVy = -7; jScore += 5; document.getElementById("jump-score").innerText = jScore;
                 }
             });
-
-            if(playerY > 260) {
-                clearAllTimers(); document.getElementById("jump-score").innerText = jScore + " (Düştün!)"; return;
-            }
+            if(playerY > 260) { document.getElementById("jump-score").innerText = jScore + " (Düştün!)"; return; }
 
             jCtx.fillStyle = "#0f172a"; jCtx.fillRect(0, 0, 260, 260);
             jCtx.fillStyle = "#38bdf8"; jCtx.fillRect(playerX, playerY, 15, 15);
-
-            jCtx.fillStyle = "#22c55e";
-            platforms.forEach(plat => jCtx.fillRect(plat.x, plat.y, plat.w, 8));
+            jCtx.fillStyle = "#22c55e"; platforms.forEach(plat => jCtx.fillRect(plat.x, plat.y, plat.w, 8));
+            activeAnimFrame = requestAnimationFrame(loopJump);
         }
 
-        /* --- OYUN 12: SIMON SAYS --- */
+        /* --- 6 RENKLİ SIMON SAYS --- */
         let simonSeq = [], simonUserStep = 0, simonLevel = 1;
         function resetSimon() {
-            clearAllTimers();
-            simonSeq = []; simonUserStep = 0; simonLevel = 1;
+            stopAllGames(); simonSeq = []; simonUserStep = 0; simonLevel = 1;
             document.getElementById("simon-status").innerText = "Seviye: 1";
             nextSimonRound();
         }
         function nextSimonRound() {
-            simonUserStep = 0;
-            document.getElementById("simon-status").innerText = "Seviye: " + simonLevel;
-            simonSeq.push(Math.floor(Math.random() * 4));
+            simonUserStep = 0; document.getElementById("simon-status").innerText = "Seviye: " + simonLevel;
+            simonSeq.push(Math.floor(Math.random() * 6)); // 6 Renk
             playSimonSeq();
         }
         function playSimonSeq() {
             let i = 0;
+            let speed = Math.max(250, 600 - (simonLevel * 30)); // Seviye arttıkça hızlanır
             let timer = setInterval(() => {
-                flashSimon(simonSeq[i]);
-                i++;
+                flashSimon(simonSeq[i]); i++;
                 if(i >= simonSeq.length) clearInterval(timer);
-            }, 600);
+            }, speed);
+            activeIntervals.push(timer);
         }
         function flashSimon(btnIdx) {
             let el = document.getElementById("simon-" + btnIdx);
-            el.classList.add("active");
-            setTimeout(() => el.classList.remove("active"), 300);
+            if(el) { el.classList.add("active"); setTimeout(() => el.classList.remove("active"), 200); }
         }
         function pressSimon(btnIdx) {
             flashSimon(btnIdx);
             if(btnIdx === simonSeq[simonUserStep]) {
                 simonUserStep++;
-                if(simonUserStep >= simonSeq.length) {
-                    simonLevel++;
-                    setTimeout(nextSimonRound, 800);
-                }
-            } else {
-                document.getElementById("simon-status").innerText = "Yanlış! Rekor: " + (simonLevel - 1);
+                if(simonUserStep >= simonSeq.length) { simonLevel++; setTimeout(nextSimonRound, 700); }
+            } else { document.getElementById("simon-status").innerText = "Yanlış! Rekor Seviye: " + (simonLevel - 1); }
+        }
+
+        /* --- BOKS / BLOK --- */
+        const bxCanvas = document.getElementById("boxCanvas");
+        const bxCtx = bxCanvas.getContext("2d");
+        let punchSide = 'left', punchY = 0, bxScore = 0;
+        function resetBox() {
+            stopAllGames(); bxScore = 0; punchY = 0; document.getElementById("box-score").innerText = bxScore;
+            spawnPunch(); loopBox();
+        }
+        function spawnPunch() { punchSide = Math.random() < 0.5 ? 'left' : 'right'; punchY = 0; }
+        function blockBox(side) {
+            if(punchY > 160 && punchY < 230 && side === punchSide) {
+                bxScore += 10; document.getElementById("box-score").innerText = bxScore; spawnPunch();
             }
+        }
+        function loopBox() {
+            if(currentGame !== 13) return;
+            punchY += 3.5 + (bxScore * 0.1);
+            bxCtx.fillStyle = "#0f172a"; bxCtx.fillRect(0, 0, 260, 260);
+
+            // Boksör oyuncu
+            bxCtx.fillStyle = "#22c55e"; bxCtx.fillRect(50, 210, 40, 30); bxCtx.fillRect(170, 210, 40, 30);
+
+            // Gelen yumruk
+            bxCtx.fillStyle = "#ef4444";
+            if(punchSide === 'left') bxCtx.fillRect(55, punchY, 30, 30);
+            else bxCtx.fillRect(175, punchY, 30, 30);
+
+            if(punchY > 230) { document.getElementById("box-score").innerText = bxScore + " (Nakavt Oldun!)"; return; }
+            activeAnimFrame = requestAnimationFrame(loopBox);
+        }
+
+        /* --- ARABA YARIŞI --- */
+        const rcCanvas = document.getElementById("raceCanvas");
+        const rcCtx = rcCanvas.getContext("2d");
+        let carLane = 1, obstacles = [], rcScore = 0, rcTimer = 0;
+        const lanes = [40, 115, 190];
+        function resetRace() {
+            stopAllGames(); carLane = 1; obstacles = []; rcScore = 0; rcTimer = 0;
+            document.getElementById("race-score").innerText = rcScore;
+            loopRace();
+        }
+        function moveRaceLane(dir) {
+            carLane += dir; if(carLane < 0) carLane = 0; if(carLane > 2) carLane = 2;
+        }
+        function loopRace() {
+            if(currentGame !== 14) return;
+            rcTimer++;
+            if(rcTimer > 35) {
+                rcTimer = 0;
+                obstacles.push({lane: Math.floor(Math.random() * 3), y: -40});
+            }
+            rcCtx.fillStyle = "#0f172a"; rcCtx.fillRect(0, 0, 260, 260);
+
+            // Şerit çizgileri
+            rcCtx.strokeStyle = "#334155"; rcCtx.lineWidth = 2;
+            rcCtx.setLineDash([10, 10]);
+            rcCtx.beginPath(); rcCtx.moveTo(86, 0); rcCtx.lineTo(86, 260); rcCtx.moveTo(173, 0); rcCtx.lineTo(173, 260); rcCtx.stroke();
+            rcCtx.setLineDash([]);
+
+            // Oyuncu Arabası
+            rcCtx.fillStyle = "#38bdf8"; rcCtx.fillRect(lanes[carLane], 200, 30, 50);
+
+            // Engeller
+            for(let i = obstacles.length - 1; i >= 0; i--) {
+                obstacles[i].y += 4 + (rcScore * 0.1);
+                rcCtx.fillStyle = "#ef4444";
+                rcCtx.fillRect(lanes[obstacles[i].lane], obstacles[i].y, 30, 40);
+
+                // Çarpışma Testi
+                if(obstacles[i].lane === carLane && obstacles[i].y + 40 >= 200 && obstacles[i].y <= 250) {
+                    document.getElementById("race-score").innerText = rcScore + " (Kaza Yaptın!)"; return;
+                }
+
+                if(obstacles[i].y > 260) {
+                    obstacles.splice(i, 1); rcScore += 5; document.getElementById("race-score").innerText = rcScore;
+                }
+            }
+            activeAnimFrame = requestAnimationFrame(loopRace);
         }
 
         resetSnake();
