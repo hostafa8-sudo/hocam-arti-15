@@ -1,87 +1,81 @@
-cat << 'EOF' > index.html
-<!DOCTYPE html>
+echo '<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Süper Web Projesi</title>
+    <title>Arcade Oyun Portalı</title>
     <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            background-color: #0d1117;
-            color: #58a6ff;
-            font-family: 'Courier New', Courier, monospace;
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             min-height: 100vh;
-            margin: 0;
+            padding: 20px 10px;
         }
-        h1 {
-            color: #3fb950;
-            text-shadow: 0 0 10px #3fb950;
+        h1 { color: #38bdf8; text-align: center; margin-bottom: 10px; font-size: 1.8rem; }
+        .nav-btns { display: flex; gap: 10px; margin-bottom: 20px; }
+        .nav-btn {
+            background: #1e293b; border: 2px solid #38bdf8; color: #38bdf8;
+            padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer;
         }
+        .nav-btn.active { background: #38bdf8; color: #0f172a; }
         .card {
-            background: #161b22;
-            border: 1px solid #30363d;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            text-align: center;
-            max-width: 350px;
-            width: 100%;
+            background: #1e293b; border: 1px solid #334155; padding: 20px;
+            border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            text-align: center; max-width: 400px; width: 100%; display: none;
         }
-        .board {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 20px;
-        }
+        .card.active { display: block; }
+        
+        /* Tic Tac Toe */
+        .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0; }
         .cell {
-            width: 80px;
-            height: 80px;
-            background-color: #21262d;
-            border: 2px solid #30363d;
-            font-size: 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: #f0f6fc;
-            border-radius: 5px;
+            width: 90px; height: 90px; background: #0f172a; border: 2px solid #334155;
+            font-size: 2.5rem; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; border-radius: 8px; color: #f8fafc; font-weight: bold;
         }
-        .cell:hover {
-            background-color: #30363d;
+        
+        /* Snake */
+        canvas { background: #0f172a; border: 2px solid #334155; border-radius: 8px; margin-top: 10px; }
+        .controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; width: 180px; margin: 15px auto 0; }
+        .ctrl-btn { background: #334155; color: white; border: none; padding: 12px; border-radius: 6px; font-size: 1.2rem; }
+
+        button.action-btn {
+            margin-top: 15px; padding: 10px 20px; background: #22c55e;
+            color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;
         }
-        #status {
-            margin-top: 15px;
-            font-size: 1.2rem;
-            color: #d2a8ff;
-        }
-        button {
-            margin-top: 15px;
-            padding: 10px 20px;
-            background-color: #238636;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        button:hover {
-            background-color: #2ea043;
-        }
+        #status { margin-top: 10px; font-size: 1.1rem; color: #cbd5e1; }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h1>🎮 Web Sunucu Projesi</h1>
-        <p>Termux ve Vercel Üzerinde Çalışan Oyunlu Web Sitem</p>
-        <hr style="border-color: #30363d;">
-        
-        <h3>Tic-Tac-Toe (XOX) Oyunu</h3>
-        <div class="board" id="board">
+    <h1>🎮 Proje Oyun Portalı</h1>
+    <div class="nav-btns">
+        <button class="nav-btn active" onclick="switchGame(1)">🐍 Yılan Oyunu</button>
+        <button class="nav-btn" onclick="switchGame(2)">❌ XOX Oyunu</button>
+    </div>
+
+    <!-- OYUN 1: YILAN -->
+    <div id="game1" class="card active">
+        <h2>Yılan Oyunu</h2>
+        <div id="status">Skor: <span id="score">0</span></div>
+        <canvas id="snakeCanvas" width="280" height="280"></canvas>
+        <div class="controls">
+            <div></div><button class="ctrl-btn" onclick="setDir('UP')">⬆️</button><div></div>
+            <button class="ctrl-btn" onclick="setDir('LEFT')">⬅️</button>
+            <button class="ctrl-btn" onclick="setDir('DOWN')">⬇️</button>
+            <button class="ctrl-btn" onclick="setDir('RIGHT')">➡️</button>
+        </div>
+        <button class="action-btn" onclick="resetSnake()">Yeniden Başlat</button>
+    </div>
+
+    <!-- OYUN 2: XOX -->
+    <div id="game2" class="card">
+        <h2>Tic-Tac-Toe</h2>
+        <div class="board">
             <div class="cell" onclick="makeMove(0)"></div>
             <div class="cell" onclick="makeMove(1)"></div>
             <div class="cell" onclick="makeMove(2)"></div>
@@ -92,68 +86,84 @@ cat << 'EOF' > index.html
             <div class="cell" onclick="makeMove(7)"></div>
             <div class="cell" onclick="makeMove(8)"></div>
         </div>
-        <div id="status">Sıra: X</div>
-        <button onclick="resetGame()">Yeniden Başlat</button>
+        <div id="xox-status">Sıra: X</div>
+        <button class="action-btn" onclick="resetXOX()">Yeniden Başlat</button>
     </div>
 
     <script>
-        let board = ['', '', '', '', '', '', '', '', ''];
-        let currentPlayer = 'X';
-        let isGameActive = true;
-
-        const winningConditions = [
-            [0, 1, 2], [3, 4, 5], [6, 7, 8],
-            [0, 3, 6], [1, 4, 7], [2, 5, 8],
-            [0, 4, 8], [2, 4, 6]
-        ];
-
-        function makeMove(index) {
-            if (board[index] === '' && isGameActive) {
-                board[index] = currentPlayer;
-                document.getElementsByClassName('cell')[index].innerText = currentPlayer;
-                checkResult();
-            }
+        function switchGame(num) {
+            document.querySelectorAll(".card").forEach(c => c.classList.remove("active"));
+            document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+            document.getElementById("game" + num).classList.add("active");
+            event.target.classList.add("active");
+            if(num === 1) resetSnake();
         }
 
-        function checkResult() {
-            let roundWon = false;
-            for (let i = 0; i < winningConditions.length; i++) {
-                const [a, b, c] = winningConditions[i];
-                if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-                    roundWon = true;
-                    break;
-                }
-            }
+        /* --- XOX LOGIC --- */
+        let board = ["", "", "", "", "", "", "", "", ""];
+        let currentPlayer = "X", isGameActive = true;
+        const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 
-            if (roundWon) {
-                document.getElementById('status').innerText = `Kazanan: ${currentPlayer} 🎉`;
-                isGameActive = false;
-                return;
-            }
-
-            if (!board.includes('')) {
-                document.getElementById('status').innerText = 'Berabere! 🤝';
-                isGameActive = false;
-                return;
-            }
-
-            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-            document.getElementById('status').innerText = `Sıra: ${currentPlayer}`;
-        }
-
-        function resetGame() {
-            board = ['', '', '', '', '', '', '', '', ''];
-            currentPlayer = 'X';
-            isGameActive = true;
-            document.getElementById('status').innerText = `Sıra: ${currentPlayer}`;
-            let cells = document.getElementsByClassName('cell');
-            for (let i = 0; i < cells.length; i++) {
-                cells[i].innerText = '';
+        function makeMove(i) {
+            if(board[i] === "" && isGameActive) {
+                board[i] = currentPlayer;
+                document.querySelectorAll(".cell")[i].innerText = currentPlayer;
+                checkXOX();
             }
         }
+        function checkXOX() {
+            let won = wins.some(w => board[w[0]] && board[w[0]]===board[w[1]] && board[w[0]]===board[w[2]]);
+            if(won) { document.getElementById("xox-status").innerText = `Kazanan: ${currentPlayer} 🎉`; isGameActive = false; return; }
+            if(!board.includes("")) { document.getElementById("xox-status").innerText = "Berabere! 🤝"; isGameActive = false; return; }
+            currentPlayer = currentPlayer === "X" ? "O" : "X";
+            document.getElementById("xox-status").innerText = `Sıra: ${currentPlayer}`;
+        }
+        function resetXOX() {
+            board = ["", "", "", "", "", "", "", "", ""]; currentPlayer = "X"; isGameActive = true;
+            document.getElementById("xox-status").innerText = "Sıra: X";
+            document.querySelectorAll(".cell").forEach(c => c.innerText = "");
+        }
+
+        /* --- SNAKE LOGIC --- */
+        const canvas = document.getElementById("snakeCanvas");
+        const ctx = canvas.getContext("2d");
+        let snake, food, dir, score, gameLoop;
+
+        function resetSnake() {
+            clearInterval(gameLoop);
+            snake = [{x: 10, y: 10}]; food = {x: 5, y: 5}; dir = "RIGHT"; score = 0;
+            document.getElementById("score").innerText = score;
+            gameLoop = setInterval(drawSnake, 150);
+        }
+        function setDir(d) {
+            if(d==="UP"&&dir!=="DOWN") dir="UP";
+            if(d==="DOWN"&&dir!=="UP") dir="DOWN";
+            if(d==="LEFT"&&dir!=="RIGHT") dir="LEFT";
+            if(d==="RIGHT"&&dir!=="LEFT") dir="RIGHT";
+        }
+        function drawSnake() {
+            let head = {...snake[0]};
+            if(dir==="UP") head.y--; if(dir==="DOWN") head.y++;
+            if(dir==="LEFT") head.x--; if(dir==="RIGHT") head.x++;
+
+            if(head.x<0 || head.x>=14 || head.y<0 || head.y>=14 || snake.some(s=>s.x===head.x && s.y===head.y)) {
+                alert("Oyun Bitti! Skorunuz: " + score);
+                resetSnake(); return;
+            }
+
+            snake.unshift(head);
+            if(head.x===food.x && head.y===food.y) {
+                score += 10; document.getElementById("score").innerText = score;
+                food = {x: Math.floor(Math.random()*14), y: Math.floor(Math.random()*14)};
+            } else { snake.pop(); }
+
+            ctx.fillStyle = "#0f172a"; ctx.fillRect(0, 0, 280, 280);
+            ctx.fillStyle = "#ef4444"; ctx.fillRect(food.x*20, food.y*20, 18, 18);
+            ctx.fillStyle = "#22c55e";
+            snake.forEach(s => ctx.fillRect(s.x*20, s.y*20, 18, 18));
+        }
+        resetSnake();
     </script>
-
 </body>
-</html>
-EOF
+</html>' > index.html
 
