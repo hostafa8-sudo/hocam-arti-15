@@ -696,7 +696,7 @@
 
         /* ================= 3D MOTOR VE OYUNLAR (SABİT & AKICI) ================= */
         let scene3D, camera3D, renderer3D;
-        let p3D, obs3D = [], score3D = 0, is3DActive = false;
+        let p3D, obs3D = [], bullets3D = [], score3D = 0, is3DActive = false;
         let keys3D = { left: false, right: false, up: false, down: false };
 
         function switchGame3D(num) {
@@ -789,7 +789,7 @@
             stopAllGames();
             init3D();
             score3D = 0; document.getElementById("score-3d").innerText = score3D;
-            is3DActive = true; obs3D = []; keys3D = { left: false, right: false, up: false, down: false };
+            is3DActive = true; obs3D = []; bullets3D = []; keys3D = { left: false, right: false, up: false, down: false };
 
             if(currentGame3D === 1) { // 3D ARABA
                 const roadMat = new THREE.MeshLambertMaterial({ color: 0x1e293b });
@@ -807,6 +807,7 @@
                 loop3DSnake();
             } else if(currentGame3D === 3) { // 3D UZAY
                 p3D = create3DBox(0.8, 0.3, 1, 0x38bdf8);
+                p3D.position.set(0, 0, 2);
                 scene3D.add(p3D);
                 loop3DSpace();
             } else if(currentGame3D === 4) { // 3D PONG
@@ -841,7 +842,7 @@
             return new THREE.Mesh(new THREE.SphereGeometry(r, 16, 16), new THREE.MeshLambertMaterial({ color: col }));
         }
 
-        // 3D Araba Döngüsü (DARALTILMIŞ ŞERİT - ARALARA SIĞAMAZ)
+        // 3D Araba
         const lanes3D = [-1.8, 0, 1.8];
         function loop3DRace() {
             if(!is3DActive || currentGame3D !== 1 || currentMode !== '3d') return;
@@ -856,8 +857,6 @@
             }
             for(let i=obs3D.length-1; i>=0; i--) {
                 obs3D[i].position.z += 0.38;
-                
-                // Hassas Çarpışma Testi (Aralara Sığamaz)
                 if(Math.abs(p3D.position.x - obs3D[i].position.x) < 1.25 && Math.abs(p3D.position.z - obs3D[i].position.z) < 1.5) {
                     playSound('gameover');
                     document.getElementById("score-3d").innerText = score3D + " (Kaza!)"; return;
@@ -899,21 +898,60 @@
             activeAnimFrame = requestAnimationFrame(loop3DSnake);
         }
 
-        // 3D Uzay
+        // 3D Uzay (DÜŞMAN SAVAŞ UÇAKLARI DAHİL)
         function shoot3D() {
             playSound('shoot');
             let b = create3DSphere(0.15, 0xef4444);
-            b.position.copy(p3D.position); scene3D.add(b); obs3D.push(b);
+            b.position.copy(p3D.position); scene3D.add(b); bullets3D.push(b);
         }
         function loop3DSpace() {
             if(!is3DActive || currentGame3D !== 3 || currentMode !== '3d') return;
-            if(keys3D.left) { p3D.position.x -= 0.1; if(p3D.position.x < -2.8) p3D.position.x = -2.8; }
-            if(keys3D.right) { p3D.position.x += 0.1; if(p3D.position.x > 2.8) p3D.position.x = 2.8; }
+            if(keys3D.left) { p3D.position.x -= 0.12; if(p3D.position.x < -2.8) p3D.position.x = -2.8; }
+            if(keys3D.right) { p3D.position.x += 0.12; if(p3D.position.x > 2.8) p3D.position.x = 2.8; }
 
-            for(let i=obs3D.length-1; i>=0; i--) {
-                obs3D[i].position.z -= 0.3;
-                if(obs3D[i].position.z < -20) { playSound('score'); scene3D.remove(obs3D[i]); obs3D.splice(i, 1); score3D += 5; document.getElementById("score-3d").innerText = score3D; }
+            // Düşman Savaş Uçağı Türetme (Uzaktan Geliyorlar)
+            if(Math.random() < 0.04) {
+                let enemy = create3DBox(0.9, 0.4, 0.9, 0xef4444);
+                enemy.position.set((Math.random() * 5.2) - 2.6, 0, -30);
+                scene3D.add(enemy); obs3D.push(enemy);
             }
+
+            // Lazer Mermilerini İlerletme
+            for(let b = bullets3D.length - 1; b >= 0; b--) {
+                bullets3D[b].position.z -= 0.45;
+
+                // Düşman Vurma Kontrolü
+                for(let e = obs3D.length - 1; e >= 0; e--) {
+                    if(bullets3D[b] && bullets3D[b].position.distanceTo(obs3D[e].position) < 0.8) {
+                        playSound('score');
+                        scene3D.remove(obs3D[e]); obs3D.splice(e, 1);
+                        scene3D.remove(bullets3D[b]); bullets3D.splice(b, 1);
+                        score3D += 10; document.getElementById("score-3d").innerText = score3D;
+                        break;
+                    }
+                }
+                if(bullets3D[b] && bullets3D[b].position.z < -32) {
+                    scene3D.remove(bullets3D[b]); bullets3D.splice(b, 1);
+                }
+            }
+
+            // Düşman Gemilerini İlerletme
+            for(let e = obs3D.length - 1; e >= 0; e--) {
+                obs3D[e].position.z += 0.25;
+
+                // Oyuncu Gemisine Çarpma Kontrolü
+                if(p3D.position.distanceTo(obs3D[e].position) < 0.9) {
+                    playSound('gameover');
+                    document.getElementById("score-3d").innerText = score3D + " (Vuruldun!)"; return;
+                }
+
+                // Dünyayı Geçme Kontrolü
+                if(obs3D[e].position.z > 4) {
+                    playSound('gameover');
+                    document.getElementById("score-3d").innerText = score3D + " (Uzay İşgal Edildi!)"; return;
+                }
+            }
+
             renderer3D.render(scene3D, camera3D);
             activeAnimFrame = requestAnimationFrame(loop3DSpace);
         }
