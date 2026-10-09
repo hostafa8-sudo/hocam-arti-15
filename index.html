@@ -1,73 +1,78 @@
-echo '<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arcade Oyun Portalı</title>
+    <title>Efsane Web Oyun Portalı</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             background-color: #0f172a;
             color: #f8fafc;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            font-family: "Segoe UI", Roboto, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            padding: 20px 10px;
+            padding: 15px;
         }
-        h1 { color: #38bdf8; text-align: center; margin-bottom: 10px; font-size: 1.8rem; }
-        .nav-btns { display: flex; gap: 10px; margin-bottom: 20px; }
+        h1 { color: #38bdf8; text-align: center; margin-bottom: 15px; font-size: 1.8rem; }
+        .nav-btns { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; max-width: 420px; }
         .nav-btn {
-            background: #1e293b; border: 2px solid #38bdf8; color: #38bdf8;
-            padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer;
+            background: #1e293b; border: 1.5px solid #38bdf8; color: #38bdf8;
+            padding: 8px 10px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.85rem;
         }
         .nav-btn.active { background: #38bdf8; color: #0f172a; }
         .card {
             background: #1e293b; border: 1px solid #334155; padding: 20px;
             border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            text-align: center; max-width: 400px; width: 100%; display: none;
+            text-align: center; max-width: 380px; width: 100%; display: none;
         }
         .card.active { display: block; }
-        
-        /* Tic Tac Toe */
-        .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0; }
-        .cell {
-            width: 90px; height: 90px; background: #0f172a; border: 2px solid #334155;
-            font-size: 2.5rem; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; border-radius: 8px; color: #f8fafc; font-weight: bold;
-        }
-        
-        /* Snake */
-        canvas { background: #0f172a; border: 2px solid #334155; border-radius: 8px; margin-top: 10px; }
-        .controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; width: 180px; margin: 15px auto 0; }
-        .ctrl-btn { background: #334155; color: white; border: none; padding: 12px; border-radius: 6px; font-size: 1.2rem; }
-
         button.action-btn {
             margin-top: 15px; padding: 10px 20px; background: #22c55e;
             color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;
         }
-        #status { margin-top: 10px; font-size: 1.1rem; color: #cbd5e1; }
+        
+        /* XOX */
+        .xox-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 15px 0; }
+        .xox-cell { width: 85px; height: 85px; background: #0f172a; border: 2px solid #334155; font-size: 2.2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 8px; font-weight: bold; }
+
+        /* CANVAS OYUNLARI */
+        canvas { background: #0f172a; border: 2px solid #334155; border-radius: 8px; margin-top: 10px; touch-action: none; }
+        .controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; width: 160px; margin: 10px auto 0; }
+        .ctrl-btn { background: #334155; color: white; border: none; padding: 10px; border-radius: 6px; font-size: 1.1rem; }
+
+        /* HAFIZA */
+        .memory-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 15px; }
+        .mem-card { height: 70px; background: #0f172a; border: 2px solid #334155; border-radius: 8px; font-size: 2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+        /* REFLEKS */
+        .click-target { width: 110px; height: 110px; background: #ef4444; border-radius: 50%; margin: 15px auto; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: bold; cursor: pointer; user-select: none; }
     </style>
 </head>
 <body>
 
     <h1>🎮 Proje Oyun Portalı</h1>
     <div class="nav-btns">
-        <button class="nav-btn active" onclick="switchGame(1)">🐍 Yılan Oyunu</button>
-        <button class="nav-btn" onclick="switchGame(2)">❌ XOX Oyunu</button>
+        <button class="nav-btn active" onclick="switchGame(1)">🐍 Yılan</button>
+        <button class="nav-btn" onclick="switchGame(2)">❌ XOX</button>
+        <button class="nav-btn" onclick="switchGame(3)">🧠 Hafıza</button>
+        <button class="nav-btn" onclick="switchGame(4)">🎯 Refleks</button>
+        <button class="nav-btn" onclick="switchGame(5)">🏓 Pong</button>
+        <button class="nav-btn" onclick="switchGame(6)">🐤 Kuş</button>
     </div>
 
     <!-- OYUN 1: YILAN -->
     <div id="game1" class="card active">
         <h2>Yılan Oyunu</h2>
-        <div id="status">Skor: <span id="score">0</span></div>
-        <canvas id="snakeCanvas" width="280" height="280"></canvas>
+        <div>Skor: <span id="snake-score">0</span></div>
+        <canvas id="snakeCanvas" width="260" height="260"></canvas>
         <div class="controls">
-            <div></div><button class="ctrl-btn" onclick="setDir('UP')">⬆️</button><div></div>
-            <button class="ctrl-btn" onclick="setDir('LEFT')">⬅️</button>
-            <button class="ctrl-btn" onclick="setDir('DOWN')">⬇️</button>
-            <button class="ctrl-btn" onclick="setDir('RIGHT')">➡️</button>
+            <div></div><button class="ctrl-btn" onclick="setDir(\x27UP\x27)">⬆️</button><div></div>
+            <button class="ctrl-btn" onclick="setDir(\x27LEFT\x27)">⬅️</button>
+            <button class="ctrl-btn" onclick="setDir(\x27DOWN\x27)">⬇️</button>
+            <button class="ctrl-btn" onclick="setDir(\x27RIGHT\x27)">➡️</button>
         </div>
         <button class="action-btn" onclick="resetSnake()">Yeniden Başlat</button>
     </div>
@@ -75,65 +80,112 @@ echo '<!DOCTYPE html>
     <!-- OYUN 2: XOX -->
     <div id="game2" class="card">
         <h2>Tic-Tac-Toe</h2>
-        <div class="board">
-            <div class="cell" onclick="makeMove(0)"></div>
-            <div class="cell" onclick="makeMove(1)"></div>
-            <div class="cell" onclick="makeMove(2)"></div>
-            <div class="cell" onclick="makeMove(3)"></div>
-            <div class="cell" onclick="makeMove(4)"></div>
-            <div class="cell" onclick="makeMove(5)"></div>
-            <div class="cell" onclick="makeMove(6)"></div>
-            <div class="cell" onclick="makeMove(7)"></div>
-            <div class="cell" onclick="makeMove(8)"></div>
+        <div class="xox-board">
+            <div class="xox-cell" onclick="makeMove(0)"></div>
+            <div class="xox-cell" onclick="makeMove(1)"></div>
+            <div class="xox-cell" onclick="makeMove(2)"></div>
+            <div class="xox-cell" onclick="makeMove(3)"></div>
+            <div class="xox-cell" onclick="makeMove(4)"></div>
+            <div class="xox-cell" onclick="makeMove(5)"></div>
+            <div class="xox-cell" onclick="makeMove(6)"></div>
+            <div class="xox-cell" onclick="makeMove(7)"></div>
+            <div class="xox-cell" onclick="makeMove(8)"></div>
         </div>
         <div id="xox-status">Sıra: X</div>
         <button class="action-btn" onclick="resetXOX()">Yeniden Başlat</button>
     </div>
 
+    <!-- OYUN 3: HAFIZA -->
+    <div id="game3" class="card">
+        <h2>Hafıza Oyunu</h2>
+        <div id="mem-status">Eşleşme: 0 / 4</div>
+        <div class="memory-board" id="mem-board"></div>
+        <button class="action-btn" onclick="resetMemory()">Yeniden Başlat</button>
+    </div>
+
+    <!-- OYUN 4: REFLEKS -->
+    <div id="game4" class="card">
+        <h2>Refleks Testi</h2>
+        <div id="click-status">10 Saniyede Kaç Tık?</div>
+        <div class="click-target" id="clicker" onclick="clickTarget()">BAŞLA</div>
+        <div>Tıklama Sayısı: <span id="click-count">0</span></div>
+        <button class="action-btn" onclick="resetClicker()">Sıfırla</button>
+    </div>
+
+    <!-- OYUN 5: PING PONG -->
+    <div id="game5" class="card">
+        <h2>Ping Pong</h2>
+        <div>Skor: <span id="pong-score">0</span></div>
+        <canvas id="pongCanvas" width="260" height="260"></canvas>
+        <div style="margin-top: 10px; display: flex; gap: 10px; justify-content: center;">
+            <button class="ctrl-btn" style="width: 80px;" onclick="movePong(-20)">⬅️ Sol</button>
+            <button class="ctrl-btn" style="width: 80px;" onclick="movePong(20)">Sağ ➡️</button>
+        </div>
+        <button class="action-btn" onclick="resetPong()">Yeniden Başlat</button>
+    </div>
+
+    <!-- OYUN 6: FLAPPY BIRD -->
+    <div id="game6" class="card">
+        <h2>Engelden Kaçış</h2>
+        <div>Skor: <span id="bird-score">0</span></div>
+        <canvas id="birdCanvas" width="260" height="260" onclick="jumpBird()"></canvas>
+        <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 5px;">Zıplamak için kutunun içine tıkla!</p>
+        <button class="action-btn" onclick="resetBird()">Yeniden Başlat</button>
+    </div>
+
     <script>
+        let currentGame = 1;
+        let activeIntervals = [];
+
+        function clearAllTimers() {
+            activeIntervals.forEach(clearInterval);
+            activeIntervals = [];
+        }
+
         function switchGame(num) {
+            clearAllTimers();
+            currentGame = num;
             document.querySelectorAll(".card").forEach(c => c.classList.remove("active"));
             document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
             document.getElementById("game" + num).classList.add("active");
             event.target.classList.add("active");
             if(num === 1) resetSnake();
+            if(num === 3) resetMemory();
+            if(num === 4) resetClicker();
+            if(num === 5) resetPong();
+            if(num === 6) resetBird();
         }
 
-        /* --- XOX LOGIC --- */
-        let board = ["", "", "", "", "", "", "", "", ""];
-        let currentPlayer = "X", isGameActive = true;
+        /* --- XOX --- */
+        let board = ["","","","","","","","",""], currentPlayer = "X", isXOXActive = true;
         const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-
         function makeMove(i) {
-            if(board[i] === "" && isGameActive) {
+            if(board[i] === "" && isXOXActive) {
                 board[i] = currentPlayer;
-                document.querySelectorAll(".cell")[i].innerText = currentPlayer;
-                checkXOX();
+                document.querySelectorAll(".xox-cell")[i].innerText = currentPlayer;
+                let won = wins.some(w => board[w[0]] && board[w[0]]===board[w[1]] && board[w[0]]===board[w[2]]);
+                if(won) { document.getElementById("xox-status").innerText = `Kazanan: ${currentPlayer} 🎉`; isXOXActive = false; return; }
+                if(!board.includes("")) { document.getElementById("xox-status").innerText = "Berabere! 🤝"; isXOXActive = false; return; }
+                currentPlayer = currentPlayer === "X" ? "O" : "X";
+                document.getElementById("xox-status").innerText = `Sıra: ${currentPlayer}`;
             }
         }
-        function checkXOX() {
-            let won = wins.some(w => board[w[0]] && board[w[0]]===board[w[1]] && board[w[0]]===board[w[2]]);
-            if(won) { document.getElementById("xox-status").innerText = `Kazanan: ${currentPlayer} 🎉`; isGameActive = false; return; }
-            if(!board.includes("")) { document.getElementById("xox-status").innerText = "Berabere! 🤝"; isGameActive = false; return; }
-            currentPlayer = currentPlayer === "X" ? "O" : "X";
-            document.getElementById("xox-status").innerText = `Sıra: ${currentPlayer}`;
-        }
         function resetXOX() {
-            board = ["", "", "", "", "", "", "", "", ""]; currentPlayer = "X"; isGameActive = true;
+            board = ["","","","","","","","",""]; currentPlayer = "X"; isXOXActive = true;
             document.getElementById("xox-status").innerText = "Sıra: X";
-            document.querySelectorAll(".cell").forEach(c => c.innerText = "");
+            document.querySelectorAll(".xox-cell").forEach(c => c.innerText = "");
         }
 
-        /* --- SNAKE LOGIC --- */
-        const canvas = document.getElementById("snakeCanvas");
-        const ctx = canvas.getContext("2d");
-        let snake, food, dir, score, gameLoop;
-
+        /* --- YILAN --- */
+        const sCanvas = document.getElementById("snakeCanvas");
+        const sCtx = sCanvas.getContext("2d");
+        let snake, food, dir, sScore;
         function resetSnake() {
-            clearInterval(gameLoop);
-            snake = [{x: 10, y: 10}]; food = {x: 5, y: 5}; dir = "RIGHT"; score = 0;
-            document.getElementById("score").innerText = score;
-            gameLoop = setInterval(drawSnake, 150);
+            clearAllTimers();
+            snake = [{x: 5, y: 5}]; food = {x: 2, y: 2}; dir = "RIGHT"; sScore = 0;
+            document.getElementById("snake-score").innerText = sScore;
+            let loop = setInterval(drawSnake, 160);
+            activeIntervals.push(loop);
         }
         function setDir(d) {
             if(d==="UP"&&dir!=="DOWN") dir="UP";
@@ -145,25 +197,159 @@ echo '<!DOCTYPE html>
             let head = {...snake[0]};
             if(dir==="UP") head.y--; if(dir==="DOWN") head.y++;
             if(dir==="LEFT") head.x--; if(dir==="RIGHT") head.x++;
-
-            if(head.x<0 || head.x>=14 || head.y<0 || head.y>=14 || snake.some(s=>s.x===head.x && s.y===head.y)) {
-                alert("Oyun Bitti! Skorunuz: " + score);
-                resetSnake(); return;
+            if(head.x<0 || head.x>=13 || head.y<0 || head.y>=13 || snake.some(s=>s.x===head.x && s.y===head.y)) {
+                clearAllTimers();
+                document.getElementById("snake-score").innerText = sScore + " (Oyun Bitti!)";
+                return;
             }
-
             snake.unshift(head);
             if(head.x===food.x && head.y===food.y) {
-                score += 10; document.getElementById("score").innerText = score;
-                food = {x: Math.floor(Math.random()*14), y: Math.floor(Math.random()*14)};
+                sScore += 10; document.getElementById("snake-score").innerText = sScore;
+                food = {x: Math.floor(Math.random()*13), y: Math.floor(Math.random()*13)};
             } else { snake.pop(); }
-
-            ctx.fillStyle = "#0f172a"; ctx.fillRect(0, 0, 280, 280);
-            ctx.fillStyle = "#ef4444"; ctx.fillRect(food.x*20, food.y*20, 18, 18);
-            ctx.fillStyle = "#22c55e";
-            snake.forEach(s => ctx.fillRect(s.x*20, s.y*20, 18, 18));
+            sCtx.fillStyle = "#0f172a"; sCtx.fillRect(0, 0, 260, 260);
+            sCtx.fillStyle = "#ef4444"; sCtx.fillRect(food.x*20, food.y*20, 18, 18);
+            sCtx.fillStyle = "#22c55e"; snake.forEach(s => sCtx.fillRect(s.x*20, s.y*20, 18, 18));
         }
+
+        /* --- HAFIZA --- */
+        const emojis = ["🚀","🚀","👾","👾","🔥","🔥","⚡","⚡"];
+        let flipped = [], matchedCount = 0;
+        function resetMemory() {
+            matchedCount = 0; flipped = [];
+            document.getElementById("mem-status").innerText = "Eşleşme: 0 / 4";
+            const boardEl = document.getElementById("mem-board");
+            boardEl.innerHTML = "";
+            let shuffled = [...emojis].sort(() => Math.random() - 0.5);
+            shuffled.forEach(emoji => {
+                let card = document.createElement("div");
+                card.className = "mem-card";
+                card.dataset.val = emoji;
+                card.onclick = () => flipCard(card);
+                boardEl.appendChild(card);
+            });
+        }
+        function flipCard(card) {
+            if(flipped.length < 2 && !card.innerText) {
+                card.innerText = card.dataset.val;
+                flipped.push(card);
+                if(flipped.length === 2) {
+                    if(flipped[0].dataset.val === flipped[1].dataset.val) {
+                        matchedCount++;
+                        document.getElementById("mem-status").innerText = `Eşleşme: ${matchedCount} / 4`;
+                        flipped = [];
+                        if(matchedCount === 4) document.getElementById("mem-status").innerText = "Tebrikler! Kazandın 🎉";
+                    } else {
+                        setTimeout(() => {
+                            if(flipped[0]) flipped[0].innerText = "";
+                            if(flipped[1]) flipped[1].innerText = "";
+                            flipped = [];
+                        }, 700);
+                    }
+                }
+            }
+        }
+
+        /* --- REFLEKS --- */
+        let clicks = 0, timeLeft = 10, clickActive = false;
+        function resetClicker() {
+            clearAllTimers();
+            clicks = 0; timeLeft = 10; clickActive = false;
+            document.getElementById("click-count").innerText = "0";
+            document.getElementById("click-status").innerText = "10 Saniyede Kaç Tık?";
+            document.getElementById("clicker").innerText = "BAŞLA";
+        }
+        function clickTarget() {
+            if(!clickActive && timeLeft === 10) {
+                clickActive = true;
+                document.getElementById("clicker").innerText = "TIKLA!";
+                let timer = setInterval(() => {
+                    timeLeft--;
+                    document.getElementById("click-status").innerText = `Kalan Süre: ${timeLeft}s`;
+                    if(timeLeft <= 0) {
+                        clearAllTimers(); clickActive = false;
+                        document.getElementById("click-status").innerText = "Süre Bitti!";
+                        document.getElementById("clicker").innerText = "BİTTİ";
+                    }
+                }, 1000);
+                activeIntervals.push(timer);
+            }
+            if(clickActive) { clicks++; document.getElementById("click-count").innerText = clicks; }
+        }
+
+        /* --- PING PONG --- */
+        const pCanvas = document.getElementById("pongCanvas");
+        const pCtx = pCanvas.getContext("2d");
+        let paddleX = 100, ballX = 130, ballY = 100, ballDX = 2, ballDY = -2, pScore = 0;
+        function resetPong() {
+            clearAllTimers();
+            paddleX = 100; ballX = 130; ballY = 100; ballDX = 2; ballDY = -2; pScore = 0;
+            document.getElementById("pong-score").innerText = pScore;
+            let loop = setInterval(drawPong, 20);
+            activeIntervals.push(loop);
+        }
+        function movePong(dir) {
+            paddleX += dir;
+            if(paddleX < 0) paddleX = 0;
+            if(paddleX > 200) paddleX = 200;
+        }
+        function drawPong() {
+            pCtx.fillStyle = "#0f172a"; pCtx.fillRect(0, 0, 260, 260);
+            pCtx.fillStyle = "#38bdf8"; pCtx.fillRect(paddleX, 245, 60, 10);
+            pCtx.fillStyle = "#ef4444"; pCtx.beginPath(); pCtx.arc(ballX, ballY, 6, 0, Math.PI*2); pCtx.fill();
+            
+            ballX += ballDX; ballY += ballDY;
+            if(ballX <= 6 || ballX >= 254) ballDX = -ballDX;
+            if(ballY <= 6) ballDY = -ballDY;
+            if(ballY >= 239 && ballX >= paddleX && ballX <= paddleX + 60) {
+                ballDY = -ballDY; pScore += 10;
+                document.getElementById("pong-score").innerText = pScore;
+            } else if(ballY >= 254) {
+                clearAllTimers();
+                document.getElementById("pong-score").innerText = pScore + " (Oyun Bitti!)";
+            }
+        }
+
+        /* --- FLAPPY BIRD --- */
+        const bCanvas = document.getElementById("birdCanvas");
+        const bCtx = bCanvas.getContext("2d");
+        let birdY = 130, velocity = 0, pipes = [], bScore = 0;
+        function resetBird() {
+            clearAllTimers();
+            birdY = 130; velocity = 0; pipes = []; bScore = 0;
+            document.getElementById("bird-score").innerText = bScore;
+            let loop = setInterval(drawBird, 25);
+            activeIntervals.push(loop);
+        }
+        function jumpBird() { velocity = -5; }
+        function drawBird() {
+            velocity += 0.3; birdY += velocity;
+            if(Math.random() < 0.02) {
+                let gap = 70;
+                let topH = Math.floor(Math.random() * 110) + 20;
+                pipes.push({x: 260, top: topH, bottom: topH + gap});
+            }
+            bCtx.fillStyle = "#0f172a"; bCtx.fillRect(0, 0, 260, 260);
+            bCtx.fillStyle = "#facc15"; bCtx.beginPath(); bCtx.arc(50, birdY, 8, 0, Math.PI*2); bCtx.fill();
+
+            for(let i=0; i<pipes.length; i++) {
+                pipes[i].x -= 2;
+                bCtx.fillStyle = "#22c55e";
+                bCtx.fillRect(pipes[i].x, 0, 25, pipes[i].top);
+                bCtx.fillRect(pipes[i].x, pipes[i].bottom, 25, 260 - pipes[i].bottom);
+
+                if(pipes[i].x === 50) { bScore++; document.getElementById("bird-score").innerText = bScore; }
+                if(50 >= pipes[i].x && 50 <= pipes[i].x+25 && (birdY <= pipes[i].top || birdY >= pipes[i].bottom)) {
+                    clearAllTimers(); document.getElementById("bird-score").innerText = bScore + " (Oyun Bitti!)"; return;
+                }
+            }
+            if(birdY <= 0 || birdY >= 260) {
+                clearAllTimers(); document.getElementById("bird-score").innerText = bScore + " (Oyun Bitti!)";
+            }
+        }
+
         resetSnake();
     </script>
 </body>
-</html>' > index.html
+</html>
 
