@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Efsane Web Oyun Portalı</title>
+    <title>Arcade Oyun Portalı - Muhammed Mustafa Bağışladı</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; touch-action: manipulation; }
         body {
@@ -12,7 +12,12 @@
             display: flex; flex-direction: column; align-items: center;
             min-height: 100vh; padding: 15px; user-select: none; -webkit-user-select: none;
         }
-        h1 { color: #38bdf8; text-align: center; margin-bottom: 12px; font-size: 1.8rem; }
+        h1 { color: #38bdf8; text-align: center; margin-bottom: 4px; font-size: 1.8rem; }
+        .author-badge {
+            background: #1e293b; border: 1px solid #38bdf8; color: #38bdf8;
+            padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold;
+            margin-bottom: 15px; text-align: center;
+        }
         .nav-btns { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; margin-bottom: 15px; max-width: 440px; }
         .nav-btn {
             background: #1e293b; border: 1.5px solid #38bdf8; color: #38bdf8;
@@ -45,11 +50,17 @@
         .simon-btn.active { opacity: 1; transform: scale(1.05); }
 
         .click-target { width: 110px; height: 110px; background: #ef4444; border-radius: 50%; margin: 15px auto; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: bold; cursor: pointer; }
+        
+        footer {
+            margin-top: 20px; font-size: 0.75rem; color: #64748b; text-align: center; line-height: 1.4;
+        }
     </style>
 </head>
 <body>
 
     <h1>🎮 Arcade Oyun Portalı</h1>
+    <div class="author-badge">👑 Geliştirici: Muhammed Mustafa Bağışladı (No: 438)</div>
+
     <div class="nav-btns">
         <button class="nav-btn active" onclick="switchGame(1)">🐍 Yılan</button>
         <button class="nav-btn" onclick="switchGame(2)">❌ XOX</button>
@@ -197,7 +208,7 @@
         <button class="action-btn" onclick="resetTarget()">Yeniden Başlat</button>
     </div>
 
-    <!-- OYUN 11: SONSUZ DİKEY ZIPLAMA (DÜZELTİLDİ) -->
+    <!-- OYUN 11: SONSUZ ZIPLAMA -->
     <div id="game11" class="card">
         <h2>Sonsuz Zıplama</h2>
         <div>Yükseklik: <span id="jump-score">0</span>m</div>
@@ -228,7 +239,7 @@
         <button class="action-btn" onclick="resetSimon()">Yeniden Başlat</button>
     </div>
 
-    <!-- OYUN 13: YENİLENMİŞ EFSANE BOKS -->
+    <!-- OYUN 13: BOKS ARENASI -->
     <div id="game13" class="card">
         <h2>Boks Arenası</h2>
         <div>Skor: <span id="box-score">0</span></div>
@@ -251,6 +262,10 @@
         </div>
         <button class="action-btn" onclick="resetRace()">Yeniden Başlat</button>
     </div>
+
+    <footer>
+        © 2026 Tasarım & Kodlama: Muhammed Mustafa Bağışladı (No: 438)<br>Tüm Hakları Saklıdır.
+    </footer>
 
     <script>
         let currentGame = 1;
@@ -660,7 +675,7 @@
             if(dist <= 20) { tgScore += 10; document.getElementById("target-score").innerText = tgScore; spawnTarget(); }
         }
 
-        /* --- SONSUZ ZIPLAMA (TIRMAMA OYUNU DÜZELTİLDİ) --- */
+        /* --- SONSUZ ZIPLAMA --- */
         const jCanvas = document.getElementById("jumpCanvas");
         const jCtx = jCanvas.getContext("2d");
         let playerX = 120, playerY = 180, pVy = 0, platforms = [], cameraY = 0, maxHeight = 0;
@@ -683,7 +698,6 @@
 
             pVy += 0.35; playerY += pVy;
 
-            // Kamera yukarı kaydırma
             if(playerY < 120) {
                 let diff = 120 - playerY;
                 playerY = 120;
@@ -700,7 +714,6 @@
                 });
             }
 
-            // Platform zıplamaları
             platforms.forEach(plat => {
                 if(pVy > 0 && playerX + 15 >= plat.x && playerX <= plat.x + plat.w && playerY + 15 >= plat.y && playerY + 15 <= plat.y + 10) {
                     pVy = -7.5;
@@ -744,7 +757,7 @@
             } else { document.getElementById("simon-status").innerText = "Yanlış! Rekor Seviye: " + (simonLevel - 1); }
         }
 
-        /* --- BOKS ARENASI (BAŞTAN TASARLANDI) --- */
+        /* --- BOKS ARENASI --- */
         const bxCanvas = document.getElementById("boxCanvas");
         const bxCtx = bxCanvas.getContext("2d");
         let punchSide = 'left', punchY = 0, bxScore = 0, playerAction = 'normal';
@@ -766,15 +779,12 @@
             
             bxCtx.fillStyle = "#0f172a"; bxCtx.fillRect(0, 0, 260, 260);
 
-            // Ring ipleri
             bxCtx.strokeStyle = "#ef4444"; bxCtx.lineWidth = 3;
             bxCtx.strokeRect(10, 10, 240, 240);
 
-            // Rakip Boksör
             bxCtx.font = "40px Serif";
             bxCtx.fillText("🥊", punchSide === 'left' ? 60 : 160, Math.min(punchY, 180));
 
-            // Bizim Boksör (Aşağıda)
             bxCtx.font = "45px Serif";
             bxCtx.fillText(playerAction === 'normal' ? "🛡️" : "💥", 110, 230);
 
